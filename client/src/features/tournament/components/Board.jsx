@@ -13,12 +13,20 @@ export default function Board({board}) {
     return (x + y) % 2 === 1;
   }
 
+  // This function returns the piece's location in
+  // the chess' standard algebraic notation format.
+  function getPosition(i) {
+    const {x, y} = getCoordinates(i);
+    const horizontalAxis = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'][x];
+    return `${horizontalAxis}${y + 1}`;
+  }
+
   return (
     <>
       <div className="board">
         {board.flat().map((piece, i) => (
           <div key={i} className="board-tile">
-            <BoardTile piece={piece} dark={isDark(i)} />
+            <BoardTile piece={piece} dark={isDark(i)} position={getPosition(i)} />
           </div>
         ))}
       </div>
