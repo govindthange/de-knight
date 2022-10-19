@@ -1,6 +1,6 @@
- # IPFS
+# IPFS
 
- IPFS is a de-centralized file and web hosting protocol founded on ideals of freedom and openness.
+IPFS is a de-centralized file and web hosting protocol founded on ideals of freedom and openness.
 
 # Check IPFS Container
 
@@ -9,16 +9,16 @@ Use `docker container ls` to list all containers.
 ```
 govind@thinkpad:~$ docker container ls --format "table {{.ID}}\t{{.Image}}\t{{.Names}}"
 CONTAINER ID   IMAGE                             NAMES
-e8861270cf84   ethereum-truffle-kit_client      dapp-client
-3ebd8cba097a   ethereum-truffle-kit_dapp         dapp
-1eeeab327e73   ipfs/go-ipfs:latest               dapp-ipfs
-5b526f3fa04a   trufflesuite/ganache-cli:latest   dapp-blockchain
+e8861270cf84   de-chess_client                   de-chess-client
+3ebd8cba097a   de-chess_dapp                     de-chess
+1eeeab327e73   ipfs/go-ipfs:latest               de-chess-ipfs
+5b526f3fa04a   trufflesuite/ganache-cli:latest   de-chess-blockchain
 ```
 
-- Confirm that the `dapp-ipfs` container is up!
-- Note down the container ID of `dapp-ipfs`.
-	- The `dapp-ipfs` container ID is `1eeeab327e73`
-	- We will need this ID while uploading files via console.
+- Confirm that the `de-chess-ipfs` container is up!
+- Note down the container ID of `de-chess-ipfs`.
+  - The `de-chess-ipfs` container ID is `1eeeab327e73`
+  - We will need this ID while uploading files via console.
 
 # Test IPFS Web Console
 
@@ -26,40 +26,39 @@ You can view the web console on your local node by opening following URL on brow
 
 http://localhost:5001/webui
 
-
 # Test IPFS File Upload
 
 1. Create a sample file.
 
-    ```
-    govind@thinkpad:~/kit/ethereum-truffle-kit/ipfs$ echo "Hello World!" > ./export/hello-world
-    ```
+   ```
+   govind@thinkpad:~/de-chess/ipfs$ echo "Hello World!" > ./export/hello-world
+   ```
 
-2. Upload the above created sample file to `1eeeab327e73` which is our `dapp-ipfs` container.
+2. Upload the above created sample file to `1eeeab327e73` which is our `de-chess-ipfs` container.
 
-    Use `ipfs add <file-name>` to upload the file.
+   Use `ipfs add <file-name>` to upload the file.
 
-    ```
-    govind@thinkpad:~/kit/ethereum-truffle-kit/ipfs$ docker exec 1eeeab327e73 ipfs add /ipfs/export/hello-world
-    13 B / 13 B  100.00%added QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG hello-world
-    ```
+   ```
+   govind@thinkpad:~/de-chess/ipfs$ docker exec 1eeeab327e73 ipfs add /ipfs/export/hello-world
+   13 B / 13 B  100.00%added QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG hello-world
+   ```
 
 3. Note the CID returned by IPFS.
-	- It is `QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG`
-	- A content identifier, or CID, is a label used to point to material in IPFS.
-	- It doesn't indicate where the content is stored, but it forms a kind of address based on the content itself.
+
+   - It is `QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG`
+   - A content identifier, or CID, is a label used to point to material in IPFS.
+   - It doesn't indicate where the content is stored, but it forms a kind of address based on the content itself.
 
 4. Use `ipfs cat /ipfs/<cid>` to print the file on console.
 
-	```
-	govind@thinkpad:~/kit/ethereum-truffle-kit/ipfs$ docker exec 1eeeab327e73 ipfs cat /ipfs/QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG
-	Hello World!
-	```
+   ```
+   govind@thinkpad:~/de-chess/ipfs$ docker exec 1eeeab327e73 ipfs cat /ipfs/QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG
+   Hello World!
+   ```
 
 5. Open the following URL to see the file on browser:
 
-    http://127.0.0.1:8080/ipfs/QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG
-
+   http://127.0.0.1:8080/ipfs/QmfM2r8seH2GiRaC4esTjeraXEachRt8ZsSeGaWTPLyMoG
 
 # Print IPFS Swarm Peers
 
@@ -73,7 +72,6 @@ govind@thinkpad:~$ docker exec 1eeeab327e73 ipfs swarm peers
 /ip4/110.251.156.84/udp/9606/quic/p2p/12D3KooWPW3m8DnvtKh5Zg3a87itMGVkYx4qjfaePUqocfm56YEA
 /ip4/111.167.20.172/udp/40133/quic/p2p/12D3KooWMeQe1TjiF1YRKxgwuJw3bUSTCFyA4o4AQijH7poDPKuo
 ```
-
 
 # Print IPFS Details
 
