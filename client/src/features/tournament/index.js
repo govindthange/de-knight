@@ -13,6 +13,7 @@ function Tournament(props) {
   const [board, setBoard] = useState([]);
   const [isGameOver, setIsGameOver] = useState();
   const [result, setResult] = useState();
+  const [turnChessboard, setTurnChessboard] = useState();
 
   useEffect(() => {
     startChess();
@@ -20,6 +21,7 @@ function Tournament(props) {
       setBoard(game.board);
       setIsGameOver(game.isGameOver);
       setResult(getResult());
+      setTurnChessboard(game.turnChessboard);
     });
 
     // Stop listening once this component is unloaded!
@@ -47,7 +49,7 @@ function Tournament(props) {
     <div className="tournament">
       {statusContent}
       <div className="board-container">
-        <Board board={board} />
+        <Board board={board} turnBoard={turnChessboard} />
       </div>
       {resultContent}
     </div>

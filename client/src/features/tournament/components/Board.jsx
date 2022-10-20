@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import BoardTile from './BoardTile';
 
-export default function Board({board}) {
+export default function Board({board, turnBoard}) {
+  const [currentBoard, setCurrentBoard] = useState([]);
+
+  useEffect(() => {
+    setCurrentBoard(turnBoard === 'w' ? board.flat() : board.flat().reverse());
+  }, [board, turnBoard]);
+
   function getCoordinates(i) {
-    const x = i % 8;
-    const y = Math.abs(Math.floor(i / 8) - 7);
+    const x = turnBoard === 'w' ? i % 8 : Math.abs((i % 8) - 7);
+    const y = turnBoard === 'w' ? Math.abs(Math.floor(i / 8) - 7) : Math.abs(Math.floor(i / 8));
     return {x, y};
   }
 
@@ -24,7 +30,7 @@ export default function Board({board}) {
   return (
     <>
       <div className="board">
-        {board.flat().map((piece, i) => (
+        {currentBoard.flat().map((piece, i) => (
           <div key={i} className="board-tile">
             <BoardTile piece={piece} dark={isDark(i)} position={getPosition(i)} />
           </div>

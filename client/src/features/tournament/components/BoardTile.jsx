@@ -28,7 +28,7 @@ function BoardTile({piece, dark, position}) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [position]);
 
   // Display an empty tile if a piece is not available!
   let content = piece && <Piece piece={piece} position={position} />;

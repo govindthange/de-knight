@@ -35,6 +35,7 @@ function updateSubject(pendingPromotion) {
   const updatedSubject = {
     board: chess.board(),
     pendingPromotion,
+    turnChessboard: chess.turn(),
     isGameOver,
     result: isGameOver ? getResult() : null
   };
