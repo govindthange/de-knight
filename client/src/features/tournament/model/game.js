@@ -1,11 +1,20 @@
 import * as Chess from 'chess.js';
 import {BehaviorSubject} from 'rxjs';
 
+//
 // FEN position to test various scenarios
 //
-// Test promotion of pawns
-// const TEST_PROMOTION_SCENARIO = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
-// const chess = new Chess(TEST_PROMOTION_SCENARIO);
+// Scenario 1. Promotion of pawns
+const TEST_PROMOTION_SCENARIO = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
+
+// Scenario 2. There is a draw and the other user can't make any moves.
+const TEST_STALE_MATE_SCENARIO = '4k3/4P3/4K3/8/8/8/8/8 b - - 0 78';
+
+// Scenario 3. There is a check mate and user can't make any moves.
+const TEST_CHECK_MATE_SCENARIO = 'rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3';
+
+// Scenario 4. There are insufficient pieces.
+const TEST_INSUCCICIENT__PIECES_SCENARIO = `k7/8/n7/8/8/8/8/7K b - - 0 1`;
 
 const chess = new Chess();
 
@@ -16,12 +25,35 @@ export function start() {
 }
 
 function updateSubject(pendingPromotion) {
+  const isGameOver = chess.game_over();
+
   const updatedSubject = {
     board: chess.board(),
-    pendingPromotion
+    pendingPromotion,
+    isGameOver,
+    result: isGameOver ? getResult() : null
   };
-
   subjectObservable.next(updatedSubject);
+}
+
+export function getResult() {
+  if (chess.in_checkmate()) {
+    const winner = chess.turn() === 'w' ? 'Dark' : 'Light';
+    return `Checkmate - Winner - ${winner}`;
+  } else if (chess.in_draw()) {
+    let reason = '50 Moves Rule';
+    if (chess.in_stalemate()) {
+      reason = 'Stalemate';
+    } else if (chess.in_threefold_repetition()) {
+      reason = 'Repetition';
+    } else if (chess.insufficient_material()) {
+      reason = 'Insufficient pieces';
+    }
+
+    return `Draw - ${reason}`;
+  } else {
+    return '';
+  }
 }
 
 export function handleMove(from, to) {

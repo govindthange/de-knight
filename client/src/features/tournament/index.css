@@ -64,4 +64,14 @@
   max-width: 68%;
   max-height: 68%;
 
+
+.vertical-text {
+  text-transform: uppercase;
+  text-orientation: upright;
+  writing-mode:vertical-lr;
+  font-family: sans-serif;
+  padding: 10px;
+  color: white
+}
+
 }
