@@ -24,6 +24,11 @@ export function start() {
   updateSubject();
 }
 
+export function reset() {
+  chess.reset();
+  updateSubject();
+}
+
 function updateSubject(pendingPromotion) {
   const isGameOver = chess.game_over();
 

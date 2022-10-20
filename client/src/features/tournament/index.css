@@ -64,6 +64,7 @@
   max-width: 68%;
   max-height: 68%;
 
+}
 
 .vertical-text {
   text-transform: uppercase;
@@ -74,4 +75,10 @@
   color: white
 }
 
+.vertical-text button {
+  margin-top: 20px;
+  curor: pointer;
+  background: rgb(63,63,63);
+  border: 2px solid white;
+  border-radius: 10px;
 }
