@@ -2,18 +2,19 @@ import './index.css';
 import React from 'react';
 import Board from './components/Board';
 import {useEffect, useState} from 'react';
-import chessEventEmitter from './model/game';
+import {subjectObservable as chessSubject, start as startChess} from './model/game';
 
 function Tournament(props) {
   const [board, setBoard] = useState([]);
 
   useEffect(() => {
-    const subscribe = chessEventEmitter.subscribe(game => {
+    startChess();
+    const subscription = chessSubject.subscribe(game => {
       setBoard(game.board);
     });
 
     // Stop listening once this component is unloaded!
-    return () => subscribe.unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
   return (

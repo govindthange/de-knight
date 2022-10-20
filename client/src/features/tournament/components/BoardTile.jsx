@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDrop} from 'react-dnd';
-import {move} from '../model/game';
+import {handleMove, subjectObservable as chessSubject} from '../model/game';
 import Piece from './Piece';
+import PromotablePieces from './PromotablePieces';
 import Tile from './Tile';
 
 function BoardTile({piece, dark, position}) {
@@ -9,14 +10,33 @@ function BoardTile({piece, dark, position}) {
     accept: 'piece',
     drop: item => {
       const [from] = item.id.split('_');
-      move(from, position);
+      handleMove(from, position);
     }
   });
 
+  const [promotion, setPromotion] = useState(null);
+
+  useEffect(() => {
+    const subscription = chessSubject.subscribe(({pendingPromotion}) => {
+      if (pendingPromotion) {
+        // Here the game has reached a state where there is a promotion pending.
+        // Handle this promotion!
+        pendingPromotion.to === position ? setPromotion(pendingPromotion) : setPromotion(null);
+      } else {
+        setPromotion(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   // Display an empty tile if a piece is not available!
+  let content = piece && <Piece piece={piece} position={position} />;
+  content = promotion ? <PromotablePieces promotion={promotion} /> : content;
+
   return (
     <div className="tile" ref={drop}>
-      <Tile dark={dark}>{piece && <Piece piece={piece} position={position} />}</Tile>
+      <Tile dark={dark}>{content}</Tile>
     </div>
   );
 }

@@ -34,12 +34,21 @@
   height: 100%;
 }
 
+.promotable-pieces {
+  width: 50%;
+  height: 50%;
+}
+
 .tile-dark {
   background: #B59963;
 }
 
 .tile-light {
   background: #F0D9B5;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .piece-container {
@@ -52,7 +61,7 @@
 }
 
 .piece {
-  max-width: 65%;
-  max-height: 65%;
+  max-width: 68%;
+  max-height: 68%;
 
 }
