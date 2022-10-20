@@ -21,6 +21,11 @@ const chess = new Chess();
 export const subjectObservable = new BehaviorSubject();
 
 export function start() {
+  const prevoiusGameState = localStorage.getItem('de-chess-game');
+  if (prevoiusGameState) {
+    chess.load(prevoiusGameState);
+  }
+
   updateSubject();
 }
 
@@ -39,6 +44,9 @@ function updateSubject(pendingPromotion) {
     isGameOver,
     result: isGameOver ? getResult() : null
   };
+
+  localStorage.setItem('de-chess-game', chess.fen());
+
   subjectObservable.next(updatedSubject);
 }
 
