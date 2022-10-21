@@ -17,7 +17,7 @@ function Piece({piece: {type, color}, position}) {
   });
 
   // Display a piece image inside the tile.
-  const imagePath = require(`../../../assets/images/${type}_${color}.png`);
+  const imagePath = require(`../assets/${type}_${color}.svg`);
   return (
     // Without the help of preview & <DragPreviewImage /> the browser
     // will show a ghost like translucent image when dragging.

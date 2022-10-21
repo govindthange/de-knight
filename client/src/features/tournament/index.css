@@ -3,12 +3,11 @@
   margin: 0;
 }
 
-.tournament {
-  min-height: 100vh;
+.chessboard {
+  /* min-height: 100vh; */
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(34,34,34);
 }
 
 .board-container {
@@ -40,11 +39,11 @@
 }
 
 .tile-dark {
-  background: #B59963;
+  background: #dbdada;
 }
 
 .tile-light {
-  background: #F0D9B5;
+  background: #f5f2f2;
 }
 
 .cursor-pointer {
@@ -72,13 +71,29 @@
   writing-mode:vertical-lr;
   font-family: sans-serif;
   padding: 10px;
-  color: white
+  color: #6f6f6f
 }
 
-.vertical-text button {
-  margin-top: 20px;
+.chessboard-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chessboard-status p {
+  padding-right: 10px;
+  font-family: sans-serif;
+  font-size: medium;
+  color: #6f6f6f
+}
+
+.chessboard-status button {
+  margin-top: 5px;
+  font-family: sans-serif;
+  font-size: medium;
   curor: pointer;
-  background: rgb(63,63,63);
-  border: 2px solid white;
+  background: #77aaff;
+  border: 2px solid #5588ff;
   border-radius: 10px;
+  color: #FFFFFF;
 }

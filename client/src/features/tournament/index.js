@@ -31,28 +31,29 @@ function Tournament(props) {
   let statusContent;
   if (isGameOver) {
     statusContent = (
-      <h2 className="vertical-text">
-        Game Over
-        <button onClick={() => restartChess()}>
-          <span className="vertical-text">New Game</span>
-        </button>
-      </h2>
+      <button onClick={() => restartChess()}>
+        <span>New Game</span>
+      </button>
     );
   }
 
   let resultContent;
   if (result) {
-    resultContent = <p className="vertical-text">{result}</p>;
+    resultContent = <p>{result}</p>;
   }
 
   return (
-    <div className="tournament">
-      {statusContent}
-      <div className="board-container">
-        <Board board={board} turnBoard={turnChessboard} />
+    <>
+      <div className="chessboard">
+        <div className="board-container">
+          <Board board={board} turnBoard={turnChessboard} />
+        </div>
       </div>
-      {resultContent}
-    </div>
+      <div className="chessboard-status">
+        {resultContent}
+        {statusContent}
+      </div>
+    </>
   );
 }
 
