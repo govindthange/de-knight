@@ -17,7 +17,9 @@
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
 	"extensions": [
-		"juanblanco.solidity"
+		"juanblanco.solidity",
+		"streetsidesoftware.code-spell-checker",
+		"wayou.vscode-todo-highlight"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
