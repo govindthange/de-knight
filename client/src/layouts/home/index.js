@@ -1,7 +1,7 @@
 import './index.css';
 import logo from './logo.svg';
 import Header from '../header/index';
-import DummyAsyncData from '../../features/dummy-async-data';
+import DummyAsyncData from '../../features/dummy-async-data/components/DummyAsyncData';
 import ModalDialog from '../../features/dummy-async-data/components/ModalDialog';
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
