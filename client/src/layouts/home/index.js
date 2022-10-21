@@ -1,13 +1,13 @@
 import './index.css';
 import logo from './logo.svg';
 import Header from '../header/index';
-import DummyAsyncData from '../../features/dummy-async-data/components/DummyAsyncData';
-import ModalDialog from '../../features/dummy-async-data/components/ModalDialog';
+import DummyAsyncData from '../../features/dummy-feature/components/DummyAsyncData';
+import ModalDialog from '../../features/dummy-feature/components/ModalDialog';
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {openModal} from '../../features/dummy-async-data/components/ModalDialog/redux-slice';
-import {fetchAsyncDataWithFetch} from '../../features/dummy-async-data/dummyThunkSliceForFetch';
-import {fetchAsyncDataWithAxios} from '../../features/dummy-async-data/dummyThunkSliceForAxios';
+import {openModal} from '../../features/dummy-feature/components/ModalDialog/redux-slice';
+import {fetchAsyncDataWithFetch} from '../../features/dummy-feature/dummyThunkSliceForFetch';
+import {fetchAsyncDataWithAxios} from '../../features/dummy-feature/dummyThunkSliceForAxios';
 
 const Home = () => {
   const dispatch = useDispatch();
