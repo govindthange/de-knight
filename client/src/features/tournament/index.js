@@ -35,6 +35,12 @@ function Tournament(props) {
         <span>New Game</span>
       </button>
     );
+  } else {
+    statusContent = (
+      <button onClick={() => restartChess()}>
+        <span>Reset Game</span>
+      </button>
+    );
   }
 
   let resultContent;
