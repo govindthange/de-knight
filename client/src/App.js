@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import Login from './features/authentication/components/Login';
 import Home from './layouts/home';
 import {hasLoggedIn} from './features/authentication/authenticationSlice';
-import Tournament from './features/tournament';
+import Chessboard from './features/chessboard';
 
 function App() {
   const isLoggedIn = useSelector(hasLoggedIn);
@@ -12,7 +12,7 @@ function App() {
     <>
       {!isLoggedIn && <Login />}
       {isLoggedIn && <Home />}
-      <Tournament />
+      <Chessboard />
     </>
   );
 }

@@ -9,7 +9,7 @@ import {
   getResult
 } from './model/game';
 
-function Tournament(props) {
+function Chessboard(props) {
   const [board, setBoard] = useState([]);
   const [isGameOver, setIsGameOver] = useState();
   const [result, setResult] = useState();
@@ -63,4 +63,4 @@ function Tournament(props) {
   );
 }
 
-export default Tournament;
+export default Chessboard;
