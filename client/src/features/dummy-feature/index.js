@@ -1,6 +1,6 @@
 import './index.css';
 import logo from './logo.svg';
-import Header from '../header/index';
+import Header from '../../layouts/header';
 import DummyAsyncData from '../../features/dummy-feature/components/DummyAsyncData';
 import ModalDialog from '../../features/dummy-feature/components/ModalDialog';
 import {useEffect} from 'react';
@@ -9,7 +9,7 @@ import {openModal} from '../../features/dummy-feature/components/ModalDialog/red
 import {fetchAsyncDataWithFetch} from '../../features/dummy-feature/dummyThunkSliceForFetch';
 import {fetchAsyncDataWithAxios} from '../../features/dummy-feature/dummyThunkSliceForAxios';
 
-const Home = () => {
+const DummyFeature = () => {
   const dispatch = useDispatch();
   const {isOpen} = useSelector(state => state.modal);
   const {data: asyncDataFromFetch} = useSelector(state => state.dummyAsyncDataFromFetch);
@@ -62,4 +62,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default DummyFeature;
