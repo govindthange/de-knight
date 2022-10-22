@@ -50,6 +50,15 @@ services:
       - ./ipfs/export:/ipfs/export
       - ./ipfs/data:/ipfs/data
 
+  ws-server:
+    container_name: ${APP_NAME}-ws-server
+    ports:
+      - ${WS_PORT}:3000
+      - 8989:8989
+    environment:
+      - WS_PORT=3000
+      - TEST_PORT=8989
+
   client:
     container_name: ${APP_NAME}-client
     links:
@@ -60,5 +69,7 @@ services:
       - APP_PORT=7777
       - DAPP_HOST=dapp
       - DAPP_PORT=9999
+      - WSS_HOST=ws-server
+      - WSS_PORT=8989
     volumes:
       - ./client/src/contracts:/workspace/client/src/contracts
