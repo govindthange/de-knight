@@ -1,0 +1,11 @@
+version: "3"
+services:
+  ws-server:
+    build:
+      context: ./ws-server
+      dockerfile: .devcontainer/Dockerfile
+    environment:
+      - TEST_PORT=8989
+    volumes:
+      - .:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
