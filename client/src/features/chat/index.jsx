@@ -1,24 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {initiateSocket, disconnectSocket, subscribeToChat, sendMessage} from './Socket';
+import {useState} from 'react';
+import useSocket from '../../hooks/useSocket';
+
 function Chat() {
   const rooms = ['A', 'B', 'C'];
-
-  const [room, setRoom] = useState(rooms[0]);
   const [message, setMessage] = useState('');
-  const [chat, setChat] = useState([]);
-
-  useEffect(() => {
-    if (room) initiateSocket(room);
-
-    subscribeToChat((err, data) => {
-      if (err) return;
-      setChat(oldChats => [data, ...oldChats]);
-    });
-
-    return () => {
-      disconnectSocket();
-    };
-  }, [room]);
+  const {room, transcript, setRoom, emit} = useSocket(rooms[0]);
 
   return (
     <div>
@@ -33,9 +19,9 @@ function Chat() {
       <h1>Live Chat:</h1>
 
       <input type="text" name="name" value={message} onChange={e => setMessage(e.target.value)} />
-      <button onClick={() => sendMessage(room, message)}>Send</button>
+      <button onClick={() => emit('chat', message)}>Send</button>
 
-      {chat.map((m, i) => (
+      {transcript.map((m, i) => (
         <p key={i}>{m}</p>
       ))}
     </div>
