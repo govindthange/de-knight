@@ -1,19 +1,39 @@
 {
 	"name": "WebSocket Server",
 	"service": "ws-server",
-	"shutdownAction": "none",
-	"dockerComposeFile": [
-		"../../docker-compose-ws-server.yml"
-	],
 
+	// "postCreateCommand": "npm install ; npm -i -g create-react-app@5.0.1",
 
-	// Open the sub-folder with the source code
-	"workspaceFolder": "/workspace/ws-server",
+	// postAttachCommand is always run when the window connects (aka 'attaches')
+	// in the following cases:
+	// 1. Single container
+	// 2. Single container from Git repository.
+	// 3. Docker Compose.
+	// 4. Attach to existing container (postAttachCommand only)
+
+	// This command is run every time the container is started.
+	// i.e. it is only run when the container is (re)started.
+	// Note that by default the contianer is stopped and after the last
+	// window is discontained (not in the 'attach' case). But only after
+	// 10 seconds (to spped up window reloads)
+	// - Call the process w/ 'bash' to terminal the shell to use.
+	// - Specify '&' to specify that its a background process.
+	// - Specify nohup (no-hangup) o/w the process may get killed after 15 min.
+	"postStartCommand": "nohup bash -c 'npm run start &'",
+
 	"runArgs": [
 		// "--cap-add=SYS_PTRACE",
 		// "--security-opt",
 		// "seccomp=unconfined"
 	],
+	"shutdownAction": "none",
+
+	"dockerComposeFile": [
+		"../../docker-compose-ws-server.yml"
+	],
+
+	// Open the sub-folder with the source code
+	"workspaceFolder": "/workspace/ws-server",
 	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
