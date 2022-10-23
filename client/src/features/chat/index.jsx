@@ -1,10 +1,13 @@
 import {useState} from 'react';
 import useSocket from '../../hooks/useSocket';
+import useUpdateLogger from '../../hooks/useUpdateLogger';
 
 function Chat() {
   const rooms = ['A', 'B', 'C'];
   const [message, setMessage] = useState('');
-  const {room, transcript, setRoom, emit} = useSocket(rooms[0]);
+  const {room, transcript, setRoom, emit, lastStatus} = useSocket(rooms[0]);
+
+  useUpdateLogger(lastStatus);
 
   return (
     <div>

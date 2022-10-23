@@ -11,11 +11,10 @@ const connect = room => {
 };
 
 const disconnect = () => {
-  console.log('Disconnecting socket...');
   socket && socket.disconnect();
 };
 
-const handleEvent = (event, handler) => {
+const registerEvent = (event, handler) => {
   if (!socket) return true;
   socket.on(event, msg => {
     console.log('Websocket event received!');
@@ -24,29 +23,42 @@ const handleEvent = (event, handler) => {
 };
 
 function useSocket(initialRoom) {
+  const [lastStatus, setLastStatus] = useState('Initializing');
   const [room, setRoom] = useState(initialRoom);
   const [transcript, setTranscript] = useState([]);
 
   useEffect(() => {
-    if (room) connect(room);
+    if (room) {
+      setLastStatus('Connecting');
+      connect(room);
+      setLastStatus('Connected ' + socket);
+    }
 
-    const onEvent = (err, data) => {
+    // TODO: useCallback()
+    const onEvent = (err, obj) => {
+      setLastStatus(`Received [CHAT] event w/ object [${JSON.stringify(obj)}]`);
+
       if (err) return;
-      setTranscript(oldTranscript => [data, ...oldTranscript]);
+      setTranscript(oldTranscript => [obj, ...oldTranscript]);
     };
 
-    handleEvent('chat', onEvent);
+    // TODO: useCallback()
+    registerEvent('chat', onEvent);
 
     return () => {
       disconnect();
+      setLastStatus('Disconnected');
     };
   }, [room]);
 
   const emit = (event, obj) => {
-    if (socket) socket.emit(event, {message: obj, room});
+    socket && socket.emit(event, {message: obj, room});
+    setLastStatus(`Emitted ${event} event w/ ${JSON.stringify(obj)}`);
   };
 
-  return {room, setRoom, emit, transcript};
+  // Had we returned these values in array the client of this hook could
+  // have named these variable anything w/ the array destructuring operator.
+  return {room, setRoom, emit, transcript, lastStatus};
 }
 
 export default useSocket;
