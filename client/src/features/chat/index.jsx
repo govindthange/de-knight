@@ -8,10 +8,18 @@ import useSocketSubject from '../../hooks/useSocketSubject';
 function Chat() {
   const rooms = ['A', 'B', 'C'];
   const [message, setMessage] = useState('');
+  const [transcript, setTranscript] = useState([]);
   /*
   const {room, transcript, setRoom, emit, lastStatus} = useSocket(rooms[0]);
   */
-  const {room, transcript, setRoom, emit, lastStatus} = useSocketSubject(rooms[0]);
+
+  // TODO: useCallback()
+  const onEvent = event => {
+    console.log(`Received [CHAT] event w/ object [${JSON.stringify(event)}]`);
+    setTranscript(oldTranscript => [event.data, ...oldTranscript]);
+  };
+
+  const {room, setRoom, emit, lastStatus} = useSocketSubject(rooms[0], onEvent);
 
   useUpdateLogger(lastStatus);
 

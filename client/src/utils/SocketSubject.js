@@ -1,3 +1,4 @@
+import {Subject} from 'rxjs';
 import io from 'socket.io-client';
 
 const WEBSOCKET_PATH = `ws://${window.location.hostname}:${process.env.REACT_APP_WEBSOCKET_PORT}`;
@@ -8,6 +9,16 @@ let _globalState = {
   color: ''
 };
 
+class SocketEvent {
+  name;
+  data;
+
+  constructor(_name, _obj) {
+    this.name = _name;
+    this.data = _obj;
+  }
+}
+
 class SocketSubject {
   constructor() {
     if (_instance) {
@@ -16,55 +27,49 @@ class SocketSubject {
 
     _instance = this;
 
-    // this.subject = webSocket(WEBSOCKET_PATH);
-
-    // this.subject.subscribe({
-    //   next: msg => console.log(`SocketSubject next() called w/ ${msg}`), // Called whenever there is a message from the server.
-    //   error: err => console.log(`SocketSubject error() called w/ ${err}`), // Called if at any point WebSocket API signals some kind of error.
-    //   complete: () => console.log('SocketSubject complete() called.') // Called when connection is closed (for whatever reason).
-    // });
+    this.subject = new Subject();
   }
 
-  connect(room) {
+  #connect(room) {
     const socket = io(WEBSOCKET_PATH);
     socket && room && socket.emit('join', room);
     this.setPropertyValue('socket', socket);
   }
 
-  disconnect() {
+  #disconnect() {
     const socket = this.getPropertyByName('socket');
     socket && socket.disconnect();
   }
 
-  registerEvent(event, handler) {
+  #registerEvent(event, handler) {
     const socket = this.getPropertyByName('socket');
     if (!socket) return true;
     socket.on(event, msg => {
       console.log('SocketSubject-Websocket event received!');
-      return handler(null, msg);
+      return handler(event, msg);
     });
   }
+
+  #onEvent = (event, obj) => {
+    console.log(`SocketSubject received [CHAT] event w/ object [${JSON.stringify(obj)}]`);
+    this.subject.next(new SocketEvent(event, obj));
+  };
 
   enter(room) {
     if (room) {
       this.setPropertyValue('room', room);
       console.log('SocketSubject Connecting');
-      this.connect(room);
+      this.#connect(room);
       console.log('SocketSubject Connected');
     }
 
-    const onEvent = (err, obj) => {
-      console.log(`SocketSubject received [CHAT] event w/ object [${JSON.stringify(obj)}]`);
+    this.#registerEvent('chat', this.#onEvent);
 
-      // if (err) return;
-      // setTranscript(oldTranscript => [obj, ...oldTranscript]);
-    };
-
-    this.registerEvent('chat', onEvent);
+    console.log(this.subject);
   }
 
   exit() {
-    this.disconnect();
+    this.#disconnect();
     console.log('SocketSubject disconnected');
   }
 

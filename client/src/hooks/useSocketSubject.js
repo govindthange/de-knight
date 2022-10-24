@@ -1,10 +1,9 @@
 import {useEffect, useState} from 'react';
 import socketObservable from '../utils/SocketSubject';
 
-function useSocketSubject(initialRoom) {
+function useSocketSubject(initialRoom, eventHandler) {
   const [lastStatus, setLastStatus] = useState('Initializing');
   const [room, setRoom] = useState(initialRoom);
-  const [transcript, setTranscript] = useState([]);
 
   useEffect(() => {
     if (room) {
@@ -13,18 +12,16 @@ function useSocketSubject(initialRoom) {
       setLastStatus(`Entered room '${room}'`);
     }
 
-    // TODO: useCallback()
-    const onEvent = (err, obj) => {
-      setLastStatus(`Received [CHAT] event w/ object [${JSON.stringify(obj)}]`);
-
-      if (err) return;
-      setTranscript(oldTranscript => [obj, ...oldTranscript]);
-    };
-
-    // TODO: useCallback()
-    socketObservable.registerEvent('chat', onEvent);
+    let subscription = null;
+    if (eventHandler) {
+      // TODO: useCallback()
+      subscription = socketObservable.getSubject().subscribe({
+        next: eventHandler
+      });
+    }
 
     return () => {
+      subscription && subscription.unsubscribe();
       socketObservable.exit();
       setLastStatus(`Exited room '${room}'`);
     };
@@ -37,7 +34,7 @@ function useSocketSubject(initialRoom) {
 
   // Had we returned these values in array the client of this hook could
   // have named these variable anything w/ the array destructuring operator.
-  return {room, setRoom, emit, transcript, lastStatus};
+  return {room, setRoom, emit, lastStatus};
 }
 
 export default useSocketSubject;
