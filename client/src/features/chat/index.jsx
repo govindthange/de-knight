@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 /*
 import useSocket from '../../hooks/useSocket';
 */
@@ -13,13 +13,13 @@ function Chat() {
   const {room, transcript, setRoom, emit, lastStatus} = useSocket(rooms[0]);
   */
 
-  // TODO: useCallback()
-  const onEvent = event => {
+  // Get memoized callbacks.
+  const onEvent = useCallback(event => {
     console.log(`Received [CHAT] event w/ object [${JSON.stringify(event)}]`);
     setTranscript(oldTranscript => [event.data, ...oldTranscript]);
-  };
+  }, []);
 
-  const {room, setRoom, emit, lastStatus} = useSocketSubject(rooms[0], onEvent);
+  const {room, setRoom, emit, lastStatus} = useSocketSubject(rooms[0], 'chat', onEvent);
 
   useUpdateLogger(lastStatus);
 

@@ -1,31 +1,36 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import socketObservable from '../utils/SocketSubject';
 
-function useSocketSubject(initialRoom, eventHandler) {
+function useSocketSubject(initialRoom, forEvent, eventHandler) {
   const [lastStatus, setLastStatus] = useState('Initializing');
   const [room, setRoom] = useState(initialRoom);
 
+  // Get memoized callbacks.
+  const enterRoom = useCallback(() => socketObservable.enter(room, forEvent), [room, forEvent]);
+  const subscribeForEvent = useCallback(() => eventHandler, [eventHandler]);
+  const exitRoom = useCallback(() => socketObservable.exit(), []);
+
   useEffect(() => {
+    console.log('Setting up socket in useEffect()');
     if (room) {
       setLastStatus(`Entered room '${room}'`);
-      socketObservable.enter(room);
+      enterRoom();
       setLastStatus(`Entered room '${room}'`);
     }
 
     let subscription = null;
     if (eventHandler) {
-      // TODO: useCallback()
       subscription = socketObservable.getSubject().subscribe({
-        next: eventHandler
+        next: subscribeForEvent()
       });
     }
 
     return () => {
       subscription && subscription.unsubscribe();
-      socketObservable.exit();
+      exitRoom();
       setLastStatus(`Exited room '${room}'`);
     };
-  }, [room]);
+  }, [room, enterRoom, exitRoom, forEvent, eventHandler]);
 
   const emit = (event, obj) => {
     socketObservable.emit(event, obj);

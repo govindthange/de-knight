@@ -55,7 +55,7 @@ class SocketSubject {
     this.subject.next(new SocketEvent(event, obj));
   };
 
-  enter(room) {
+  enter(room, forEvent) {
     if (room) {
       this.setPropertyValue('room', room);
       console.log('SocketSubject Connecting');
@@ -63,7 +63,7 @@ class SocketSubject {
       console.log('SocketSubject Connected');
     }
 
-    this.#registerEvent('chat', this.#onEvent);
+    this.#registerEvent(forEvent, this.#onEvent);
 
     console.log(this.subject);
   }
