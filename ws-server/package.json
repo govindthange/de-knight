@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "WebSocket Server",
   "main": "server.js",
+  "type": "module",
   "dependencies": {
     "cors": "^2.8.5",
     "escape-html": "^1.0.3",
