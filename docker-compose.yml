@@ -65,7 +65,7 @@ services:
       - WS_PORT=${WS_PORT}
       - TEST_PORT=8989
     # Following command will start a pong server to test the reachability within the workspaces.
-    command: sh -c "node /workspace/ws-server/pong/pong.js 2> /workspace/ws-server/pong/pong.err > /workspace/ws-server/pong/pong.log"
+    # command: sh -c "node /workspace/ws-server/pong/pong.js 2> /workspace/ws-server/pong/pong.err > /workspace/ws-server/pong/pong.log"
 
   client:
     container_name: ${APP_NAME}-client
