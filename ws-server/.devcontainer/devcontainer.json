@@ -19,7 +19,7 @@
 	// - Call the process w/ 'bash' to terminal the shell to use.
 	// - Specify '&' to specify that its a background process.
 	// - Specify nohup (no-hangup) o/w the process may get killed after 15 min.
-	"postStartCommand": "nohup bash -c 'npm run start &'",
+	// "postStartCommand": "nohup bash -c 'npm run start &'",
 
 	"runArgs": [
 		// "--cap-add=SYS_PTRACE",
