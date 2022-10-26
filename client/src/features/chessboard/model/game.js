@@ -18,15 +18,74 @@ const TEST_INSUCCICIENT__PIECES_SCENARIO = `k7/8/n7/8/8/8/8/7K b - - 0 1`;
 
 const chess = new Chess();
 
-export const subjectObservable = new BehaviorSubject();
+export let subjectObservable = new BehaviorSubject();
 
-export function start() {
-  const prevoiusGameState = localStorage.getItem('de-chess-game');
-  if (prevoiusGameState) {
-    chess.load(prevoiusGameState);
+export async function start(multiplayerGameObject) {
+  // const {currentUser} = localStorage.getItem('de-chess-user');
+
+  if (multiplayerGameObject) {
+    // const gameObject = await multiplayerGameObject().then(p => p);
+    // if (!gameObject) {
+    //   return 'No multiplayer game object exist!';
+    // }
+
+    // const creator = gameObject.members.find(m => m.creator === true);
+
+    // if (gameObject.status === 'waiting' && creator.uid !== currentUser.uid) {
+    //   const currUser = {
+    //     uid: currentUser.uid,
+    //     name: localStorage.getItem('userName'),
+    //     piece: creator.piece === 'w' ? 'b' : 'w'
+    //   };
+    //   const updatedMembers = [...gameObject.members, currUser];
+
+    //   alert('update the document in db/remote-socket-server');
+    //   // await somePromise.update({members: updatedMembers, status: 'ready})
+    // } else if (!gameObject.members.map(m => m.uid).includes(currentUser.uid)) {
+    //   return 'intruder';
+    // }
+
+    // chess.reset();
+
+    const gameObject = await multiplayerGameObject.then(p => p);
+    if (!gameObject) {
+      return 'No multiplayer game object exist!';
+    }
+
+    // TODO: We need to put rxjs observable that wraps
+    // response from the socket client - play events.
+    // REmove new BehaviorSubject() call after you add it.
+    subjectObservable = new BehaviorSubject();
+
+    chess.load(gameObject.game);
+    const isGameOver = chess.game_over();
+
+    subjectObservable.next({
+      board: chess.board(),
+      pendingPromotion: gameObject.pendingPromotion,
+      isGameOver,
+      turnChessboard: false, //gameObject.member.piece, //position property,
+      member: 'current-user',
+      opponent: gameObject.member.uid,
+      result: isGameOver ? getResult() : null,
+      ...gameObject
+    });
+
+    return 'set observable w.r.t. remote player state. ';
+  } else {
+    // This case when gameId is null
+    // i.e. the game is being played locally.
+    subjectObservable = new BehaviorSubject();
+
+    const prevoiusGameState = localStorage.getItem('de-chess-game');
+    if (prevoiusGameState) {
+      chess.load(prevoiusGameState);
+    }
+
+    updateSubject();
+
+    return 'set observable w.r.t. locally saved state. ';
   }
-
-  updateSubject();
 }
 
 export function reset() {

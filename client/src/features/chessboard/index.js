@@ -1,7 +1,7 @@
 import './index.css';
-import React from 'react';
 import Board from './components/Board';
 import {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import {
   subjectObservable as chessSubject,
   start as startChess,
@@ -14,19 +14,44 @@ function Chessboard(props) {
   const [isGameOver, setIsGameOver] = useState();
   const [result, setResult] = useState();
   const [turnChessboard, setTurnChessboard] = useState();
+  const [initResult, setInitResult] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const {id} = useParams();
 
-  useEffect(() => {
-    startChess();
-    const subscription = chessSubject.subscribe(game => {
-      setBoard(game.board);
-      setIsGameOver(game.isGameOver);
-      setResult(getResult());
-      setTurnChessboard(game.turnChessboard);
+  // Some dummy response received from socket server.
+  const dummyResponse = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
+  const multiplayerGameObjectPromise = new Promise((resolve, reject) => {
+    resolve({
+      game: dummyResponse,
+      member: {
+        uid: 'some-uuid',
+        piece: 'b',
+        name: 'opponent', //localStorage.getItem('de-chess-user'),
+        creator: true
+      }
     });
+  });
+  useEffect(() => {
+    let subscription;
+    async function init() {
+      const res = await startChess(id !== 'local' ? multiplayerGameObjectPromise : null);
+      if (res) {
+        setInitResult(res);
+        subscription = chessSubject.subscribe(game => {
+          setBoard(game.board);
+          setIsGameOver(game.isGameOver);
+          setResult(getResult());
+          setTurnChessboard(game.turnChessboard);
+        });
+      }
 
-    // Stop listening once this component is unloaded!
-    return () => subscription.unsubscribe();
-  }, []);
+      setLoading(false);
+    }
+
+    init();
+
+    return () => subscription && subscription.unsubscribe();
+  }, [id]);
 
   let statusContent;
   if (isGameOver) {
@@ -50,6 +75,9 @@ function Chessboard(props) {
 
   return (
     <>
+      {loading && <div>'Loading...'</div>}
+      {!loading && <div>'Loaded remote player data'</div>}
+      {initResult}
       <div className="chessboard">
         <div className="board-container">
           <Board board={board} turnBoard={turnChessboard} />
