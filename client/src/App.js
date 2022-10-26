@@ -3,11 +3,14 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Home from './layouts/home';
 import UserForm from './features/authentication/components/UserForm';
 import Chessboard from './features/chessboard';
+import SocketIoDemo from './features/chat/components/SocketIoDemo';
+import {useSelector} from 'react-redux';
+import {hasLoggedIn} from './features/authentication/authenticationSlice';
 
 function App() {
-  let isAuthenticated = true;
+  const isLoggedIn = useSelector(hasLoggedIn);
 
-  if (!isAuthenticated) {
+  if (!isLoggedIn) {
     return <UserForm />;
   }
 
@@ -18,6 +21,7 @@ function App() {
           <Home></Home>
         </Route>
         <Route path="/play/:id">
+          <SocketIoDemo />
           <Chessboard></Chessboard>
         </Route>
       </Switch>

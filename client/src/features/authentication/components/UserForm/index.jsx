@@ -1,12 +1,25 @@
 import './index.css';
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {login} from '../../authenticationSlice';
 
 function UserForm() {
   const [name, setName] = useState('');
+  const [uid, setUid] = useState('');
+  const dispatch = useDispatch();
+
   const onSubmit = async evt => {
     evt.preventDefault();
-    localStorage.setItem('de-chess-user');
+    let user = {
+      uid: uid,
+      name: name,
+      piece: 'w',
+      creator: true
+    };
+    localStorage.setItem('de-chess-user', user);
+    dispatch(login(user));
   };
+
   return (
     <form className="user-form" onSubmit={onSubmit}>
       <h1>Enter your name to start</h1>
@@ -18,7 +31,17 @@ function UserForm() {
             name=""
             id=""
             className="input"
-            placeholder="Name"
+            placeholder="User ID"
+            value={uid}
+            onChange={e => setUid(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            name=""
+            id=""
+            className="input"
+            placeholder="User Name"
             value={name}
             onChange={e => setName(e.target.value)}
             required

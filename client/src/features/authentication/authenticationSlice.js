@@ -3,7 +3,7 @@ import {sub} from 'date-fns';
 
 const authenticationSlice = createSlice({
   name: 'auth',
-  initialState: {isLoggedIn: false},
+  initialState: {isLoggedIn: false, user: null},
   reducers: {
     // When we write these functions here then
     // createSlice() automatically generates an
@@ -17,6 +17,7 @@ const authenticationSlice = createSlice({
       // (Immer js creates a new state internally for you)
       // That's how Immer allow you to mutate state directly.
       mutableState.isLoggedIn = true;
+      mutableState.user = action.payload;
     },
     logout: (mutableState, action) => {
       mutableState.isLoggedIn = false;
@@ -41,5 +42,6 @@ export const {login, logout} = authenticationSlice.actions;
 // have to go through and change each component.
 // We just change it once here in the slice.
 export const hasLoggedIn = state => state.auth.isLoggedIn;
+export const getCurrentUser = state => state.auth.user;
 
 export default authenticationSlice.reducer;

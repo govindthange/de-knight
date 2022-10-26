@@ -2,9 +2,12 @@ import './index.css';
 import React from 'react';
 import {useState} from 'react';
 import * as uuid from 'uuid';
+import {useSelector} from 'react-redux';
+import {getCurrentUser} from '../../features/authentication/authenticationSlice';
 import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
 
 function Home() {
+  const currentUser = useSelector(getCurrentUser);
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
 
@@ -15,7 +18,7 @@ function Home() {
   ];
 
   const onPlayLocally = () => {
-    alert(uuid.v4());
+    // TODO: play w/ yourself.
   };
 
   const onPlayOnline = () => {
@@ -24,9 +27,9 @@ function Home() {
 
   const startOnlineGame = startingPiece => {
     const member = {
-      uid: 'some-uuid',
+      uid: currentUser.uid,
       piece: startingPiece === 'r' ? ['b', 'w'][Math.round(Math.random())] : startingPiece,
-      name: localStorage.getItem('de-chess-user'),
+      name: currentUser.name,
       creator: true
     };
 
@@ -36,7 +39,7 @@ function Home() {
       gameId: `${uuid.v4()}`
     };
 
-    console.log(`Save following object to database:%o`, game);
+    console.log(`Save following object to database:\n\n %o`, game);
     alert(`Save following object to database:\n${JSON.stringify(game)}`);
 
     history.push(`/play/${game.gameId}`);
