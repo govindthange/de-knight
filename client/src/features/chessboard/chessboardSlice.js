@@ -3,7 +3,7 @@ import {sub} from 'date-fns';
 
 const chessboardSlice = createSlice({
   name: 'chessboard',
-  initialState: {currentPlayer: null, opponentPlayer: null},
+  initialState: {currentPlayer: null, opponentPlayer: null, position: null},
   reducers: {
     // When we write these functions here then
     // createSlice() automatically generates an
@@ -17,13 +17,16 @@ const chessboardSlice = createSlice({
       // (Immer js creates a new state internally for you)
       // That's how Immer allow you to mutate state directly.
       mutableState.currentPlayer = action.payload;
+    },
+    setPosition: (mutableState, action) => {
+      mutableState.position = action.payload;
     }
   }
 });
 
 // Note that we didn't setup action-creator manually!
 // We actually setup a function that automatically returns it.
-export const {setCurrentPlayer} = chessboardSlice.actions;
+export const {setCurrentPlayer, setPosition} = chessboardSlice.actions;
 
 // Create a state selector in the slice for data points
 // which you foresee might change in the future.
@@ -31,5 +34,6 @@ export const {setCurrentPlayer} = chessboardSlice.actions;
 // have to go through and change each component.
 // We just change it once here in the slice.
 export const getCurrentPlayer = state => state.chessboard.currentPlayer;
+export const getPosition = state => state.chessboard.position;
 
 export default chessboardSlice.reducer;

@@ -1,15 +1,17 @@
 import './index.css';
 import Board from './components/Board';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {useSelector} from 'react-redux';
-import {getCurrentPlayer} from './chessboardSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {getCurrentPlayer, getPosition} from './chessboardSlice';
 import {
   subjectObservable as chessSubject,
   start as startChess,
   reset as restartChess,
   getResult
 } from './model/game';
+import useSocketIo from '../../hooks/useSocketIo';
+import {setPosition} from './chessboardSlice';
 
 function Chessboard(props) {
   const currentPlayer = useSelector(getCurrentPlayer);
@@ -20,6 +22,16 @@ function Chessboard(props) {
   const [initResult, setInitResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const {id} = useParams();
+  const dispatch = useDispatch();
+  const currentPosition = useSelector(getPosition);
+
+  // Get memoized callbacks.
+  const onEvent = useCallback((e, obj) => {
+    console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
+    dispatch(setPosition(obj));
+  }, []);
+
+  const {isConnected, emit} = useSocketIo('chat', onEvent);
 
   // Some dummy response received from socket server.
   const dummyResponse = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
@@ -81,6 +93,7 @@ function Chessboard(props) {
 
   return (
     <>
+      <div>{currentPosition}</div>
       {loading && <div>'Loading...'</div>}
       {!loading && <div>'Loaded remote player data'</div>}
       {initResult}
