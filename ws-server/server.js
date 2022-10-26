@@ -76,9 +76,15 @@ io.on("connection", (socket) => {
     socket.join(room);
   });
 
-  socket.on("chat", (data) => {
-    const { message, room } = data;
+  socket.on("chat", (obj) => {
+    const { message, room } = obj;
     console.log(`msg: ${message}, room: ${room}`);
     io.to(room).emit("chat", message);
+  });
+
+  socket.on("play", (obj) => {
+    const { move, room } = obj;
+    console.log(`move: ${move}, room: ${room}`);
+    io.to(room).emit("play", move);
   });
 });

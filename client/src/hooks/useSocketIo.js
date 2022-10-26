@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react';
 import socket from '../shared/socket-config';
 
-function useSocketIo(eventName, eventHandler) {
+function useSocketIo(listnerMap) {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   const onConnectMemoizedCallback = useCallback(() => {
@@ -14,23 +14,31 @@ function useSocketIo(eventName, eventHandler) {
     console.log('websocket has disconnected!');
   }, []);
 
-  const onEventMemoizedCallback = useCallback(obj => {
-    console.log(`websocket has received message ${JSON.stringify(obj)}`);
-    eventHandler(eventName, obj);
-  }, []);
+  const memoizedListnerMap = {
+    chat: useCallback(obj => {
+      console.log(`websocket has received message ${JSON.stringify(obj)}`);
+      listnerMap['chat']('chat', obj);
+    }, []),
+    play: useCallback(obj => {
+      console.log(`websocket has received message ${JSON.stringify(obj)}`);
+      listnerMap['play']('play', obj);
+    }, [])
+  };
 
   useEffect(() => {
     console.count('useSocketIo::useEffect() calls: ');
 
     socket.on('connect', onConnectMemoizedCallback);
     socket.on('disconnect', onDisconnectMemoizedCallback);
-    socket.on(eventName, onEventMemoizedCallback);
+    socket.on('chat', memoizedListnerMap['chat']);
+    socket.on('play', memoizedListnerMap['play']);
 
     return () => {
       console.log('clearing all websocket listeners!');
       socket.off('connect');
       socket.off('disconnect');
-      socket.off(eventName);
+      socket.off('chat');
+      socket.off('play');
     };
   }, []);
 
