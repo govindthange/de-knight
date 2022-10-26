@@ -20,9 +20,7 @@ const chess = new Chess();
 
 export let subjectObservable = new BehaviorSubject();
 
-export async function start(multiplayerGameObject) {
-  // const {currentUser} = localStorage.getItem('de-chess-user');
-
+export async function start(currentPlayer, multiplayerGameObject) {
   if (multiplayerGameObject) {
     // const gameObject = await multiplayerGameObject().then(p => p);
     // if (!gameObject) {
@@ -31,9 +29,9 @@ export async function start(multiplayerGameObject) {
 
     // const creator = gameObject.members.find(m => m.creator === true);
 
-    // if (gameObject.status === 'waiting' && creator.uid !== currentUser.uid) {
+    // if (gameObject.status === 'waiting' && creator.uid !== currentPlayer.uid) {
     //   const currUser = {
-    //     uid: currentUser.uid,
+    //     uid: currentPlayer.uid,
     //     name: localStorage.getItem('userName'),
     //     piece: creator.piece === 'w' ? 'b' : 'w'
     //   };
@@ -41,7 +39,7 @@ export async function start(multiplayerGameObject) {
 
     //   alert('update the document in db/remote-socket-server');
     //   // await somePromise.update({members: updatedMembers, status: 'ready})
-    // } else if (!gameObject.members.map(m => m.uid).includes(currentUser.uid)) {
+    // } else if (!gameObject.members.map(m => m.uid).includes(currentPlayer.uid)) {
     //   return 'intruder';
     // }
 

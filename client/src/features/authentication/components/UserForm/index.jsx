@@ -2,6 +2,7 @@ import './index.css';
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {login} from '../../authenticationSlice';
+import {setCurrentPlayer} from '../../../chessboard/chessboardSlice';
 
 function UserForm() {
   const [name, setName] = useState('');
@@ -18,6 +19,7 @@ function UserForm() {
     };
     localStorage.setItem('de-chess-user', user);
     dispatch(login(user));
+    dispatch(setCurrentPlayer(user));
   };
 
   return (

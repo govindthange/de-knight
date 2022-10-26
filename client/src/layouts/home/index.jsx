@@ -3,11 +3,11 @@ import React from 'react';
 import {useState} from 'react';
 import * as uuid from 'uuid';
 import {useSelector} from 'react-redux';
-import {getCurrentUser} from '../../features/authentication/authenticationSlice';
+import {getCurrentPlayer} from '../../features/chessboard/chessboardSlice';
 import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
 
 function Home() {
-  const currentUser = useSelector(getCurrentUser);
+  const currentPlayer = useSelector(getCurrentPlayer);
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
 
@@ -27,9 +27,9 @@ function Home() {
 
   const startOnlineGame = startingPiece => {
     const member = {
-      uid: currentUser.uid,
+      uid: currentPlayer.uid,
       piece: startingPiece === 'r' ? ['b', 'w'][Math.round(Math.random())] : startingPiece,
-      name: currentUser.name,
+      name: currentPlayer.name,
       creator: true
     };
 

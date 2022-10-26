@@ -2,6 +2,8 @@ import './index.css';
 import Board from './components/Board';
 import {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {getCurrentPlayer} from './chessboardSlice';
 import {
   subjectObservable as chessSubject,
   start as startChess,
@@ -10,6 +12,7 @@ import {
 } from './model/game';
 
 function Chessboard(props) {
+  const currentPlayer = useSelector(getCurrentPlayer);
   const [board, setBoard] = useState([]);
   const [isGameOver, setIsGameOver] = useState();
   const [result, setResult] = useState();
@@ -34,7 +37,10 @@ function Chessboard(props) {
   useEffect(() => {
     let subscription;
     async function init() {
-      const res = await startChess(id !== 'local' ? multiplayerGameObjectPromise : null);
+      const res = await startChess(
+        currentPlayer,
+        id !== 'local' ? multiplayerGameObjectPromise : null
+      );
       if (res) {
         setInitResult(res);
         subscription = chessSubject.subscribe(game => {
