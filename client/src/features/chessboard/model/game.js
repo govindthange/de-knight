@@ -25,41 +25,52 @@ export async function start(
   gameId,
   currentUser,
   multiplayerGameObject,
-  fetchGame,
+  fetchRemoteGameById,
   saveGame,
   remoteGameObservable
 ) {
   if (multiplayerGameObject) {
-    const initialGame = fetchGame();
+    // Fetch the initial remote game object
+    const initialGame = fetchRemoteGameById(gameId);
     if (!initialGame) {
-      return 'No multiplayer game object exist!';
+      alert('The remote game no more exists!');
+      return 'no-remote-game-found';
     }
 
-    const creator = initialGame.members.find(m => m.creator === true);
-
-    if (initialGame.status === 'waiting' && creator.uid !== currentUser.uid) {
-      const currUser = {
+    // If this game is in waiting and currentUser is not the creator (player #1)
+    // i.e. you, the currentUser, are the other player #2.
+    const player1 = initialGame.members.find(m => m.creator === true);
+    if (initialGame.status === 'waiting' && player1.uid !== currentUser.uid) {
+      const player2 = {
         uid: currentUser.uid,
         name: currentUser.name,
-        piece: creator.piece === 'w' ? 'b' : 'w'
+        piece: player1.piece === 'w' ? 'b' : 'w'
       };
 
-      const updatedMembers = [...initialGame.members, currUser];
+      const updatedMembers = [...initialGame.members, player2];
       saveGame({members: updatedMembers, status: 'ready'});
-    } else if (!initialGame.members.map(m => m.uid).includes(currentUser.uid)) {
+      alert('Player #2 has been initialized!');
+    }
+    // If the current game is not in waiting and you are not in the members list
+    else if (!initialGame.members.map(m => m.uid).includes(currentUser.uid)) {
+      alert('The game is not in waiting state and you are not in members list');
       return 'intruder';
     }
 
     chess.reset();
 
-    // hardcoded remote player position.
-    const game = fetchGame();
+    // Fetch the updated (not the initial one) remote game object.
+    // If it was player #2, the game object would have been updated
+    // by the 1st if-condition above.
+    const game = fetchRemoteGameById(gameId);
     const {pendingPromotion, gameData, ...restOfGame} = game;
     const member = game.members.find(m => m.uid === currentUser.uid);
     const oponent = game.members.find(m => m.uid !== currentUser.uid);
+
     if (gameData) {
       chess.load(gameData);
     }
+
     const isGameOver = chess.game_over();
 
     subjectObservable.next({
@@ -113,14 +124,13 @@ export async function start(
     // i.e. the game is being played locally.
     subjectObservable = new BehaviorSubject();
 
-    const prevoiusGameState = localStorage.getItem('de-chess-game');
+    const prevoiusGameState = localStorage.getItem('de-chess/game/standalone');
     if (prevoiusGameState) {
       chess.load(prevoiusGameState);
     }
 
     updateSubject();
-
-    return 'set observable w.r.t. LOCALLY saved state. ';
+    return 'set observable w.r.t. STANDALONE player state. ';
   }
 }
 
