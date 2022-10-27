@@ -69,21 +69,27 @@ function Chessboard(props) {
       member: {
         uid: 'some-uuid',
         piece: 'b',
-        name: 'opponent', //localStorage.getItem('de-chess-user'),
+        name: 'opponent', //localStorage.getItem('de-chess/user'),
         creator: true
       }
     });
   });
 
-  console.log(JSON.stringify(currentGame));
-  const fetchGameFromStorage = new useCallback(() => {
-    dispatch(fetchGame);
+  //
+  // If URL contains a game UID then fetch
+  // the initial remote game object.
+  //
+  const fetchRemoteGameById = new useCallback(
+    id => {
+      dispatch(fetchGame);
 
-    let str = window.localStorage.getItem('de-chess/game/remote');
-    let game = JSON.parse(str);
-    console.log('Game fetched locally is: %o', game);
-    return game;
-  }, []);
+      let str = window.localStorage.getItem('de-chess/game/remote');
+      let game = JSON.parse(str);
+      console.log('Game fetched locally is: %o', game);
+      return game;
+    },
+    [id]
+  );
 
   const onSaveGame = new useCallback(g => {
     dispatch(setGame(g));
@@ -93,9 +99,10 @@ function Chessboard(props) {
     let subscription;
     async function init() {
       const res = await startChess(
+        id,
         currentUser,
         id !== 'local' ? multiplayerGameObjectPromise : null,
-        fetchGameFromStorage,
+        fetchRemoteGameById,
         onSaveGame,
         remoteGameObservable
       );
