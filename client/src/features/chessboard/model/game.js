@@ -22,6 +22,7 @@ const chess = new Chess();
 export let subjectObservable = new BehaviorSubject();
 
 export async function start(
+  gameId,
   currentUser,
   multiplayerGameObject,
   fetchGame,
