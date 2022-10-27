@@ -93,6 +93,7 @@ function Chessboard(props) {
 
   const onSaveGame = new useCallback(g => {
     dispatch(setGame(g));
+    emit('chat', {id, message: JSON.stringify(g)});
   }, []);
 
   useEffect(() => {
@@ -107,6 +108,7 @@ function Chessboard(props) {
         remoteGameObservable
       );
       if (res) {
+        emit('join', id);
         setInitResult(res);
         subscription = chessSubject.subscribe(g => {
           if (!g) {
