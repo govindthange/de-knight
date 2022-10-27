@@ -2,24 +2,19 @@ import './index.css';
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {login} from '../../authenticationSlice';
-import {setCurrentPlayer} from '../../../chessboard/chessboardSlice';
 
 function UserForm() {
-  const [name, setName] = useState('');
-  const [uid, setUid] = useState('');
+  const [name, setName] = useState('Govind Thange');
+  const [uid, setUid] = useState('player1');
   const dispatch = useDispatch();
 
   const onSubmit = async evt => {
     evt.preventDefault();
     let user = {
       uid: uid,
-      name: name,
-      piece: 'w',
-      creator: true
+      name: name
     };
-    localStorage.setItem('de-chess-user', user);
     dispatch(login(user));
-    dispatch(setCurrentPlayer(user));
   };
 
   return (

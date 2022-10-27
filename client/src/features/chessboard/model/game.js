@@ -1,5 +1,6 @@
 import * as Chess from 'chess.js';
 import {BehaviorSubject} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 
 //
 // FEN position to test various scenarios
@@ -20,56 +21,92 @@ const chess = new Chess();
 
 export let subjectObservable = new BehaviorSubject();
 
-export async function start(currentPlayer, multiplayerGameObject) {
+export async function start(
+  currentUser,
+  multiplayerGameObject,
+  fetchGame,
+  saveGame,
+  remoteGameObservable
+) {
   if (multiplayerGameObject) {
-    // const gameObject = await multiplayerGameObject().then(p => p);
-    // if (!gameObject) {
-    //   return 'No multiplayer game object exist!';
-    // }
-
-    // const creator = gameObject.members.find(m => m.creator === true);
-
-    // if (gameObject.status === 'waiting' && creator.uid !== currentPlayer.uid) {
-    //   const currUser = {
-    //     uid: currentPlayer.uid,
-    //     name: localStorage.getItem('userName'),
-    //     piece: creator.piece === 'w' ? 'b' : 'w'
-    //   };
-    //   const updatedMembers = [...gameObject.members, currUser];
-
-    //   alert('update the document in db/remote-socket-server');
-    //   // await somePromise.update({members: updatedMembers, status: 'ready})
-    // } else if (!gameObject.members.map(m => m.uid).includes(currentPlayer.uid)) {
-    //   return 'intruder';
-    // }
-
-    // chess.reset();
-
-    const gameObject = await multiplayerGameObject.then(p => p);
-    if (!gameObject) {
+    const initialGame = fetchGame();
+    if (!initialGame) {
       return 'No multiplayer game object exist!';
     }
 
-    // TODO: We need to put rxjs observable that wraps
-    // response from the socket client - play events.
-    // REmove new BehaviorSubject() call after you add it.
-    subjectObservable = new BehaviorSubject();
+    const creator = initialGame.members.find(m => m.creator === true);
 
-    chess.load(gameObject.game);
+    if (initialGame.status === 'waiting' && creator.uid !== currentUser.uid) {
+      const currUser = {
+        uid: currentUser.uid,
+        name: currentUser.name,
+        piece: creator.piece === 'w' ? 'b' : 'w'
+      };
+
+      const updatedMembers = [...initialGame.members, currUser];
+      saveGame({members: updatedMembers, status: 'ready'});
+    } else if (!initialGame.members.map(m => m.uid).includes(currentUser.uid)) {
+      return 'intruder';
+    }
+
+    chess.reset();
+
+    // hardcoded remote player position.
+    const game = fetchGame();
+    const {pendingPromotion, gameData, ...restOfGame} = game;
+    const member = game.members.find(m => m.uid === currentUser.uid);
+    const oponent = game.members.find(m => m.uid !== currentUser.uid);
+    if (gameData) {
+      chess.load(gameData);
+    }
     const isGameOver = chess.game_over();
 
     subjectObservable.next({
       board: chess.board(),
-      pendingPromotion: gameObject.pendingPromotion,
+      pendingPromotion,
       isGameOver,
-      turnChessboard: false, //gameObject.member.piece, //position property,
-      member: 'current-user',
-      opponent: gameObject.member.uid,
+      position: member.piece,
+      member,
+      oponent,
       result: isGameOver ? getResult() : null,
-      ...gameObject
+      ...restOfGame
     });
 
-    return 'set observable w.r.t. remote player state. ';
+    // const gameObject = await multiplayerGameObject().then(obj => obj.currentGame);
+
+    // // TODO: We need to put rxjs observable that wraps
+    // // response from the socket client - play events.
+    // // REmove new BehaviorSubject() call after you add it.
+    // subjectObservable = remoteGameObservable.pipe(
+    //   //tap(v => console.log('Tap value: %o', v)),
+    //   map(obj => {
+    //     const game = obj;
+    //     console.log('MAP this %o', obj);
+    //     if (!game) return;
+    //     // alert(game);
+    //     // alert(JSON.stringify(game));
+    //     const {pendingPromotion, gameData, ...restOfGame} = game;
+    //     const member = game.members.find(m => m.uid === currentUser.uid);
+    //     const oponent = game.members.find(m => m.uid !== currentUser.uid);
+    //     if (gameData) {
+    //       chess.load(gameData);
+    //     }
+    //     const isGameOver = chess.game_over();
+
+    //     return {
+    //       board: chess.board(),
+    //       pendingPromotion,
+    //       isGameOver,
+    //       position: member.piece,
+    //       member,
+    //       oponent,
+    //       result: isGameOver ? getResult() : null,
+    //       ...restOfGame
+    //     };
+    //   })
+    // );
+
+    return 'set observable w.r.t. REMOTE player state. ';
   } else {
     // This case when gameId is null
     // i.e. the game is being played locally.
@@ -82,7 +119,7 @@ export async function start(currentPlayer, multiplayerGameObject) {
 
     updateSubject();
 
-    return 'set observable w.r.t. locally saved state. ';
+    return 'set observable w.r.t. LOCALLY saved state. ';
   }
 }
 

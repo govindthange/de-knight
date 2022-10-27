@@ -3,12 +3,20 @@ import React from 'react';
 import {useState} from 'react';
 import * as uuid from 'uuid';
 import {useSelector} from 'react-redux';
-import {getCurrentPlayer} from '../../features/chessboard/chessboardSlice';
+import {useDispatch} from 'react-redux';
+import {
+  getCurrentPlayer,
+  setCurrentPlayer,
+  setGame
+} from '../../features/chessboard/chessboardSlice';
+import {getAuthenticatedUser} from '../../features/authentication/authenticationSlice';
 import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
 
 function Home() {
+  const authenticatedUser = useSelector(getAuthenticatedUser);
   const currentPlayer = useSelector(getCurrentPlayer);
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const newGameOptions = [
@@ -18,6 +26,15 @@ function Home() {
   ];
 
   const onPlayLocally = () => {
+    const member = {
+      uid: currentPlayer.uid,
+      piece: 'w',
+      name: currentPlayer.name,
+      creator: true
+    };
+
+    dispatch(setCurrentPlayer(member));
+    history.push(`/play/local`);
     // TODO: play w/ yourself.
   };
 
@@ -27,9 +44,9 @@ function Home() {
 
   const startOnlineGame = startingPiece => {
     const member = {
-      uid: currentPlayer.uid,
+      uid: authenticatedUser.uid,
+      name: authenticatedUser.name,
       piece: startingPiece === 'r' ? ['b', 'w'][Math.round(Math.random())] : startingPiece,
-      name: currentPlayer.name,
       creator: true
     };
 
@@ -39,8 +56,8 @@ function Home() {
       gameId: `${uuid.v4()}`
     };
 
-    console.log(`Save following object to database:\n\n %o`, game);
-    alert(`Save following object to database:\n${JSON.stringify(game)}`);
+    dispatch(setGame(game)); // TODO: the gameObject should be saved under gameId
+    dispatch(setCurrentPlayer(member)); // TODO: saving currentPlayer may not be needed since we are saving in in game object!
 
     history.push(`/play/${game.gameId}`);
   };

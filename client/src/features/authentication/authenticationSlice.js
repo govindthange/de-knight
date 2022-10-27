@@ -1,5 +1,4 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {sub} from 'date-fns';
 
 const authenticationSlice = createSlice({
   name: 'auth',
@@ -18,6 +17,7 @@ const authenticationSlice = createSlice({
       // That's how Immer allow you to mutate state directly.
       mutableState.isLoggedIn = true;
       mutableState.user = action.payload;
+      localStorage.setItem('de-chess-user', JSON.stringify(action.payload));
     },
     logout: (mutableState, action) => {
       mutableState.isLoggedIn = false;
@@ -42,6 +42,6 @@ export const {login, logout} = authenticationSlice.actions;
 // have to go through and change each component.
 // We just change it once here in the slice.
 export const hasLoggedIn = state => state.auth.isLoggedIn;
-export const getCurrentUser = state => state.auth.user;
+export const getAuthenticatedUser = state => state.auth.user;
 
 export default authenticationSlice.reducer;

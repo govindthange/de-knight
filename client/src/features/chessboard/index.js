@@ -3,7 +3,14 @@ import Board from './components/Board';
 import {useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {getCurrentPlayer, getPosition} from './chessboardSlice';
+import {
+  getCurrentPlayer,
+  getPosition,
+  setPosition,
+  getGame,
+  setGame,
+  fetchGame
+} from './chessboardSlice';
 import {
   subjectObservable as chessSubject,
   start as startChess,
@@ -11,24 +18,44 @@ import {
   getResult
 } from './model/game';
 import useSocketIo from '../../hooks/useSocketIo';
-import {setPosition} from './chessboardSlice';
+import {getAuthenticatedUser} from '../authentication/authenticationSlice';
+import {BehaviorSubject} from 'rxjs';
 
 function Chessboard(props) {
+  const currentUser = useSelector(getAuthenticatedUser);
   const currentPlayer = useSelector(getCurrentPlayer);
+  const currentGame = useSelector(getGame);
   const [board, setBoard] = useState([]);
   const [isGameOver, setIsGameOver] = useState();
   const [result, setResult] = useState();
-  const [turnChessboard, setTurnChessboard] = useState();
+  const [turnChessboard, setTurnChessboard] = useState(); // TODO: rename turnChessboard to position
   const [initResult, setInitResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
+  const [gameObject, setGameObject] = useState({});
   const {id} = useParams();
   const dispatch = useDispatch();
   const currentPosition = useSelector(getPosition);
+  const sharebleLink = window.location.href;
+
+  const remoteGameObservable = new BehaviorSubject();
+
+  //
+  // Simulate remote player's move
+  //
+  const simulateRemoteUser = () => {
+    dispatch(fetchGame);
+    let str = window.localStorage.getItem('de-chess-game');
+    let game = JSON.parse(str);
+    console.log('Game fetched locally is: %o', game);
+    remoteGameObservable.next(game);
+  };
 
   // Get memoized callbacks.
   const onEvent = useCallback((e, obj) => {
     console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
     dispatch(setPosition(obj));
+    remoteGameObservable.next(obj);
   }, []);
 
   const {isConnected, emit} = useSocketIo('chat', onEvent);
@@ -37,7 +64,8 @@ function Chessboard(props) {
   const dummyResponse = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
   const multiplayerGameObjectPromise = new Promise((resolve, reject) => {
     resolve({
-      game: dummyResponse,
+      tempPosition: dummyResponse,
+      game: currentGame,
       member: {
         uid: 'some-uuid',
         piece: 'b',
@@ -46,20 +74,41 @@ function Chessboard(props) {
       }
     });
   });
+
+  console.log(JSON.stringify(currentGame));
+  const fetchGameFromStorage = new useCallback(() => {
+    dispatch(fetchGame);
+
+    let str = window.localStorage.getItem('de-chess-game');
+    let game = JSON.parse(str);
+    console.log('Game fetched locally is: %o', game);
+    return game;
+  }, []);
+
+  const onSaveGame = new useCallback(g => {
+    dispatch(setGame(g));
+  }, []);
+
   useEffect(() => {
     let subscription;
     async function init() {
       const res = await startChess(
-        currentPlayer,
-        id !== 'local' ? multiplayerGameObjectPromise : null
+        currentUser,
+        id !== 'local' ? multiplayerGameObjectPromise : null,
+        fetchGameFromStorage,
+        onSaveGame,
+        remoteGameObservable
       );
       if (res) {
         setInitResult(res);
-        subscription = chessSubject.subscribe(game => {
-          setBoard(game.board);
-          setIsGameOver(game.isGameOver);
+        subscription = chessSubject.subscribe(g => {
+          if (!g) return;
+          setBoard(g.board);
+          setIsGameOver(g.isGameOver);
           setResult(getResult());
-          setTurnChessboard(game.turnChessboard);
+          setTurnChessboard(g.turnChessboard); // TODO: rename turnChessboard to position
+          setStatus(g.status);
+          setGameObject(g);
         });
       }
 
@@ -70,6 +119,10 @@ function Chessboard(props) {
 
     return () => subscription && subscription.unsubscribe();
   }, [id]);
+
+  async function copyToClipboard() {
+    await navigator.clipboard.writeText(sharebleLink);
+  }
 
   let statusContent;
   if (isGameOver) {
@@ -93,19 +146,47 @@ function Chessboard(props) {
 
   return (
     <>
-      <div>{currentPosition}</div>
-      {loading && <div>'Loading...'</div>}
-      {!loading && <div>'Loaded remote player data'</div>}
-      {initResult}
+      <button className="button is-info" onClick={simulateRemoteUser}>
+        Simulate remote player move
+      </button>
+      <div>Chessboard.currentPosition: {currentPosition}</div>
+      <div>{loading && <div>'Loading...'</div>}</div>
+      <div>{!loading && <div>'Loaded remote player data'</div>}</div>
+      <div>Chessboard.initResult: {initResult}</div>
+      <div>Chessboard.status: {status}</div>
       <div className="chessboard">
         <div className="board-container">
+          {gameObject.oponent && gameObject.oponent.name && (
+            <span className="tag is-link">{gameObject.oponent.name}</span>
+          )}
+
           <Board board={board} turnBoard={turnChessboard} />
+          {gameObject.member && gameObject.member.name && (
+            <span className="tag is-link">{gameObject.member.name}</span>
+          )}
         </div>
       </div>
       <div className="chessboard-status">
         {resultContent}
         {statusContent}
       </div>
+      {status === 'waiting' && (
+        <div className="notification is-link share-game">
+          <strong>Share this game to continue</strong>
+          <br />
+          <br />
+          <div className="field has-addons">
+            <div className="control is-expanded">
+              <input type="text" name="" id="" className="input" readOnly value={sharebleLink} />
+            </div>
+            <div className="control">
+              <button className="button is-info" onClick={copyToClipboard}>
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
