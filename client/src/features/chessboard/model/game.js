@@ -139,7 +139,7 @@ function updateSubject(pendingPromotion) {
     result: isGameOver ? getResult() : null
   };
 
-  localStorage.setItem('de-chess-game', chess.fen());
+  localStorage.setItem('de-chess/game/standalone', chess.fen());
 
   subjectObservable.next(updatedSubject);
 }

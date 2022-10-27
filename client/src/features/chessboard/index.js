@@ -45,7 +45,7 @@ function Chessboard(props) {
   //
   const simulateRemoteUser = () => {
     dispatch(fetchGame);
-    let str = window.localStorage.getItem('de-chess-game');
+    let str = window.localStorage.getItem('de-chess/game/remote');
     let game = JSON.parse(str);
     console.log('Game fetched locally is: %o', game);
     remoteGameObservable.next(game);
@@ -79,7 +79,7 @@ function Chessboard(props) {
   const fetchGameFromStorage = new useCallback(() => {
     dispatch(fetchGame);
 
-    let str = window.localStorage.getItem('de-chess-game');
+    let str = window.localStorage.getItem('de-chess/game/remote');
     let game = JSON.parse(str);
     console.log('Game fetched locally is: %o', game);
     return game;
