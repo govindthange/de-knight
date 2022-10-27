@@ -17,7 +17,7 @@ const authenticationSlice = createSlice({
       // That's how Immer allow you to mutate state directly.
       mutableState.isLoggedIn = true;
       mutableState.user = action.payload;
-      localStorage.setItem('de-chess-user', JSON.stringify(action.payload));
+      localStorage.setItem('de-chess/user', JSON.stringify(action.payload));
     },
     logout: (mutableState, action) => {
       mutableState.isLoggedIn = false;

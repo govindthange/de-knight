@@ -24,10 +24,10 @@ const chessboardSlice = createSlice({
     setGame: (mutableState, action) => {
       mutableState.game = action.payload;
       console.log('Game saved in store as: %o', mutableState.game);
-      localStorage.setItem('de-chess-game', JSON.stringify(action.payload));
+      localStorage.setItem('de-chess/game/remote', JSON.stringify(action.payload));
     },
     fetchGame: mutableState => {
-      let str = window.localStorage.getItem('de-chess-game');
+      let str = window.localStorage.getItem('de-chess/game/remote');
       mutableState.game = JSON.parse(str);
       console.log('Game saved in store as: %o', mutableState.game);
     }
