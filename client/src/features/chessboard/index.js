@@ -109,7 +109,10 @@ function Chessboard(props) {
       if (res) {
         setInitResult(res);
         subscription = chessSubject.subscribe(g => {
-          if (!g) return;
+          if (!g) {
+            alert('No game object returned by the chessSubject observable.');
+            return;
+          }
           setBoard(g.board);
           setIsGameOver(g.isGameOver);
           setResult(getResult());
