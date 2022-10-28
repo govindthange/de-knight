@@ -21,6 +21,12 @@ const chess = new Chess();
 
 export let subjectObservable = new BehaviorSubject();
 
+let multiplayerGameId;
+let currentPlayer;
+let multiplayerGame = {};
+let sendGameToRemotePlayer;
+let players;
+
 export async function start(
   gameId,
   currentUser,
@@ -30,8 +36,12 @@ export async function start(
   remoteGameObservable
 ) {
   if (multiplayerGameObject) {
+    multiplayerGameId = gameId;
+    sendGameToRemotePlayer = saveGame;
+
     // Fetch the initial remote game object
     const initialGame = fetchRemoteGameById(gameId);
+    // console.log('initialGame (before add opponent): %o', initialGame);
     if (!initialGame) {
       alert('The remote game no more exists!');
       return 'no-remote-game-found';
@@ -47,42 +57,32 @@ export async function start(
         piece: player1.piece === 'w' ? 'b' : 'w'
       };
 
-      const updatedMembers = [...initialGame.members, player2];
-      saveGame({members: updatedMembers, status: 'ready'});
-      alert('Player #2 has been initialized!');
+      players = [...initialGame.members, player2];
+      // multiplayerGame = {...initialGame, members: players, status: 'ready'};
+      multiplayerGame = {...Object.assign(multiplayerGame, {members: players, status: 'ready'})};
+
+      console.log('MULTIPLAYERGAME 1' + JSON.stringify(multiplayerGame));
+      sendGameToRemotePlayer(multiplayerGame);
     }
     // If the current game is not in waiting and you are not in the members list
     else if (!initialGame.members.map(m => m.uid).includes(currentUser.uid)) {
       alert('The game is not in waiting state and you are not in members list');
       return 'intruder';
+    } else if (initialGame.status === 'waiting') {
+      multiplayerGame = fetchRemoteGameById(gameId);
+      players = multiplayerGame.members;
+      alert(multiplayerGame.members.length);
     }
-
+    // alert(multiplayerGame);
+    console.log('MULTIPLAYERGAME 2' + JSON.stringify(multiplayerGame));
+    // console.log('initialGame (after add opponent): %o', initialGame);
     chess.reset();
 
     // Fetch the updated (not the initial one) remote game object.
     // If it was player #2, the game object would have been updated
     // by the 1st if-condition above.
-    const game = fetchRemoteGameById(gameId);
-    const {pendingPromotion, gameData, ...restOfGame} = game;
-    const member = game.members.find(m => m.uid === currentUser.uid);
-    const oponent = game.members.find(m => m.uid !== currentUser.uid);
-
-    if (gameData) {
-      chess.load(gameData);
-    }
-
-    const isGameOver = chess.game_over();
-
-    subjectObservable.next({
-      board: chess.board(),
-      pendingPromotion,
-      isGameOver,
-      position: member.piece,
-      member,
-      oponent,
-      result: isGameOver ? getResult() : null,
-      ...restOfGame
-    });
+    applyRemotePlayerGame(currentUser, fetchRemoteGameById(gameId));
+    // applyRemotePlayerGame(currentUser, multiplayerGame);
 
     // const gameObject = await multiplayerGameObject().then(obj => obj.currentGame);
 
@@ -120,9 +120,13 @@ export async function start(
 
     return 'set observable w.r.t. REMOTE player state. ';
   } else {
-    // This case when gameId is null
-    // i.e. the game is being played locally.
-    subjectObservable = new BehaviorSubject();
+    multiplayerGameId = null;
+    currentPlayer = null;
+    sendGameToRemotePlayer = null;
+
+    // // This case when gameId is null
+    // // i.e. the game is being played locally.
+    // subjectObservable = new BehaviorSubject();
 
     const prevoiusGameState = localStorage.getItem('de-chess/game/standalone');
     if (prevoiusGameState) {
@@ -135,24 +139,81 @@ export async function start(
 }
 
 export function reset() {
-  chess.reset();
-  updateSubject();
+  if (multiplayerGameId) {
+    updateSubject(null, true);
+    chess.reset();
+  } else {
+    chess.reset();
+    updateSubject();
+  }
 }
 
-function updateSubject(pendingPromotion) {
+function updateSubject(pendingPromotion, reset) {
   const isGameOver = chess.game_over();
 
-  const updatedSubject = {
+  if (multiplayerGameId) {
+    const updatedData = {
+      ...multiplayerGame,
+      gameData: chess.fen(),
+      pendingPromotion: pendingPromotion || null
+    };
+
+    if (reset) {
+      updatedData.status = 'over';
+    }
+
+    updatedData.members = players;
+    alert('updateSubject. players:' + players.length);
+
+    localStorage.setItem('de-chess/game/remote/data', JSON.stringify(updatedData));
+    console.log(`before multiplayer game: ${JSON.stringify(multiplayerGame)}`);
+    // multiplayerGame = {...Object.assign(multiplayerGame, updatedData)};
+
+    // multiplayerGame = {...multiplayerGame, ...updatedData, members: players};
+    console.log(`after multiplayer game: ${JSON.stringify(updatedData)}`);
+    sendGameToRemotePlayer(updatedData);
+  } else {
+    const updatedSubject = {
+      board: chess.board(),
+      pendingPromotion,
+      turnChessboard: chess.turn(),
+      isGameOver,
+      result: isGameOver ? getResult() : null
+    };
+
+    localStorage.setItem('de-chess/game/standalone', chess.fen());
+
+    subjectObservable.next(updatedSubject);
+  }
+}
+
+export function applyRemotePlayerGame(currentUser, game) {
+  const {pendingPromotion, gameData, ...restOfGame} = game;
+  const member = game.members.find(m => m.uid === currentUser.uid);
+  const oponent = game.members.find(m => m.uid !== currentUser.uid);
+
+  if (gameData) {
+    chess.load(gameData);
+  }
+
+  if (players.length < 2 && restOfGame.members.length > 1) {
+    players = restOfGame.members;
+  }
+
+  const isGameOver = chess.game_over();
+
+  subjectObservable.next({
     board: chess.board(),
     pendingPromotion,
-    turnChessboard: chess.turn(),
     isGameOver,
-    result: isGameOver ? getResult() : null
-  };
+    turnChessboard: member.piece,
+    member,
+    oponent,
+    result: isGameOver ? getResult() : null,
+    ...restOfGame
+  });
 
-  localStorage.setItem('de-chess/game/standalone', chess.fen());
-
-  subjectObservable.next(updatedSubject);
+  currentPlayer = member;
 }
 
 export function getResult() {
@@ -209,9 +270,19 @@ export function move(from, to, promotion) {
     theMove.promotion = promotion;
   }
 
-  // .move() won't work for a pawns on verge of being promoted.
-  const isMoveAllowed = chess.move(theMove);
-  if (isMoveAllowed) {
-    updateSubject();
+  if (multiplayerGameId) {
+    if (currentPlayer.piece === chess.turn()) {
+      // .move() won't work for a pawns on verge of being promoted.
+      const isMoveAllowed = chess.move(theMove);
+      if (isMoveAllowed) {
+        updateSubject();
+      }
+    }
+  } else {
+    // .move() won't work for a pawns on verge of being promoted.
+    const isMoveAllowed = chess.move(theMove);
+    if (isMoveAllowed) {
+      updateSubject();
+    }
   }
 }
