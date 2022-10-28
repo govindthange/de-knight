@@ -62,16 +62,15 @@
 .piece {
   max-width: 68%;
   max-height: 68%;
-
 }
 
 .vertical-text {
   text-transform: uppercase;
   text-orientation: upright;
-  writing-mode:vertical-lr;
+  writing-mode: vertical-lr;
   font-family: sans-serif;
   padding: 10px;
-  color: #6f6f6f
+  color: #6f6f6f;
 }
 
 .chessboard-status {
@@ -84,7 +83,7 @@
   padding-right: 10px;
   font-family: sans-serif;
   font-size: medium;
-  color: #6f6f6f
+  color: #6f6f6f;
 }
 
 .chessboard-status button {
@@ -95,5 +94,12 @@
   background: #77aaff;
   border: 2px solid #5588ff;
   border-radius: 10px;
-  color: #FFFFFF;
+  color: #ffffff;
+}
+
+.share-game {
+  position: absolute;
+  width: 500px;
+  bottom: 0;
+  left: 0;
 }
