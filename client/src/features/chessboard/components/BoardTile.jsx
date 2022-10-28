@@ -17,7 +17,7 @@ function BoardTile({piece, dark, position}) {
   const [promotion, setPromotion] = useState(null);
 
   useEffect(() => {
-    const subscription = chessSubject.subscribe(({pendingPromotion}) => {
+    const subscription = chessSubject.subscribe(({pendingPromotion} = undefined || {}) => {
       if (pendingPromotion) {
         // Here the game has reached a state where there is a promotion pending.
         // Handle this promotion!

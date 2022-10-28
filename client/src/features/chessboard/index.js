@@ -15,6 +15,7 @@ import {
   subjectObservable as chessSubject,
   start as startChess,
   reset as restartChess,
+  applyRemotePlayerGame,
   getResult
 } from './model/game';
 import useSocketIo from '../../hooks/useSocketIo';
@@ -52,13 +53,25 @@ function Chessboard(props) {
   };
 
   // Get memoized callbacks.
-  const onEvent = useCallback((e, obj) => {
-    console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
-    dispatch(setPosition(obj));
-    remoteGameObservable.next(obj);
-  }, []);
+  const listenerMap = {
+    chat: useCallback((e, obj) => {
+      console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
+      // setTranscript(oldTranscript => [obj, ...oldTranscript]);
+    }, []),
 
-  const {isConnected, emit} = useSocketIo('chat', onEvent);
+    play: useCallback((e, move) => {
+      // alert(`Received '${e}' event w/ ${move} data`);
+      console.log('Received %o event w/ %o data', e, move);
+
+      const game = JSON.parse(move);
+      // dispatch(setPosition(game));
+      // remoteGameObservable.next(game);
+      !game.members && alert('no members received!');
+      applyRemotePlayerGame(currentUser, game);
+    }, [])
+  };
+
+  const {isConnected, emit} = useSocketIo(listenerMap);
 
   // Some dummy response received from socket server.
   const dummyResponse = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
@@ -91,9 +104,10 @@ function Chessboard(props) {
     [id]
   );
 
-  const onSaveGame = new useCallback(g => {
+  const sendGameToRemotePlayer = new useCallback(g => {
     dispatch(setGame(g));
-    emit('chat', {id, message: JSON.stringify(g)});
+    !g.members && alert('no members to send!');
+    emit('play', {room: id, move: JSON.stringify(g)});
   }, []);
 
   useEffect(() => {
@@ -102,9 +116,9 @@ function Chessboard(props) {
       const res = await startChess(
         id,
         currentUser,
-        id !== 'local' ? multiplayerGameObjectPromise : null,
+        id !== 'standalone' ? multiplayerGameObjectPromise : null,
         fetchRemoteGameById,
-        onSaveGame,
+        sendGameToRemotePlayer,
         remoteGameObservable
       );
       if (res) {
@@ -158,6 +172,7 @@ function Chessboard(props) {
 
   return (
     <>
+      <a href="../">Go to root page....</a>
       <button className="button is-info" onClick={simulateRemoteUser}>
         Simulate remote player move
       </button>
