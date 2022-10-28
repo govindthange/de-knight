@@ -4,8 +4,8 @@ import {useDispatch} from 'react-redux';
 import {login} from '../../authenticationSlice';
 
 function UserForm() {
-  const [name, setName] = useState('Govind Thange');
-  const [uid, setUid] = useState('player1');
+  const [name, setName] = useState('Player 1');
+  const [uid, setUid] = useState('p1');
   const dispatch = useDispatch();
 
   const onSubmit = async evt => {
