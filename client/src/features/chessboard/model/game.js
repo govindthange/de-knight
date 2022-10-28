@@ -24,7 +24,6 @@ export let subjectObservable = new BehaviorSubject();
 let currentPlayer;
 let multiplayerGame = null;
 let sendGameToRemotePlayer;
-let players;
 
 export async function start(
   gameId,
@@ -54,7 +53,7 @@ export async function start(
         piece: player1.piece === 'w' ? 'b' : 'w'
       };
 
-      players = [...initialGame.members, player2];
+      let players = [...initialGame.members, player2];
 
       multiplayerGame = Object.assign(initialGame, {id: gameId, members: players, status: 'ready'});
       sendGameToRemotePlayer(multiplayerGame);
@@ -65,7 +64,6 @@ export async function start(
       return 'intruder';
     } else if (initialGame.status === 'waiting') {
       multiplayerGame = Object.assign(initialGame, {id: gameId});
-      players = multiplayerGame.members;
     }
     chess.reset();
 
@@ -115,10 +113,6 @@ export async function start(
     currentPlayer = null;
     sendGameToRemotePlayer = null;
 
-    // // This case when gameId is null
-    // // i.e. the game is being played locally.
-    // subjectObservable = new BehaviorSubject();
-
     const prevoiusGameState = localStorage.getItem('de-chess/game/standalone');
     if (prevoiusGameState) {
       chess.load(prevoiusGameState);
@@ -143,26 +137,21 @@ function updateSubject(pendingPromotion, reset) {
   const isGameOver = chess.game_over();
 
   if (multiplayerGame) {
-    const updatedData = {
+    const updatedGame = {
       ...multiplayerGame,
       gameData: chess.fen(),
       pendingPromotion: pendingPromotion || null
     };
 
     if (reset) {
-      updatedData.status = 'over';
+      updatedGame.status = 'over';
     }
 
-    updatedData.members = players;
-    //alert('updateSubject. players:' + players.length);
-
-    localStorage.setItem('de-chess/game/remote/data', JSON.stringify(updatedData));
+    localStorage.setItem('de-chess/game/remote/data', JSON.stringify(updatedGame));
     console.log(`before multiplayer game: ${JSON.stringify(multiplayerGame)}`);
-    // multiplayerGame = {...Object.assign(multiplayerGame, updatedData)};
 
-    // multiplayerGame = {...multiplayerGame, ...updatedData, members: players};
-    console.log(`after multiplayer game: ${JSON.stringify(updatedData)}`);
-    sendGameToRemotePlayer(updatedData);
+    console.log(`after multiplayer game: ${JSON.stringify(updatedGame)}`);
+    sendGameToRemotePlayer(updatedGame);
   } else {
     const updatedSubject = {
       board: chess.board(),
@@ -179,16 +168,29 @@ function updateSubject(pendingPromotion, reset) {
 }
 
 export function applyRemotePlayerGame(currentUser, game) {
+  !game && alert('No game object received from the remote player!');
+  !game.members && alert('Game object received from remote is problematic.');
+
+  // Check newly added members in the received game object's members list
+  let newMembers = game.members.filter(
+    incomingMember =>
+      !multiplayerGame.members.some(existingMember => existingMember.uid === incomingMember.uid)
+  );
+
+  // Add the newly found members to our global multiplayerGame object's members list.
+  if (newMembers.length > 0) {
+    for (let newMember of newMembers) {
+      alert(`A new member joined! ${JSON.stringify(newMember)}`);
+      multiplayerGame.members.push(newMember);
+    }
+  }
+
   const {pendingPromotion, gameData, ...restOfGame} = game;
   const member = game.members.find(m => m.uid === currentUser.uid);
   const oponent = game.members.find(m => m.uid !== currentUser.uid);
 
   if (gameData) {
     chess.load(gameData);
-  }
-
-  if (players.length < 2 && restOfGame.members.length > 1) {
-    players = restOfGame.members;
   }
 
   const isGameOver = chess.game_over();
