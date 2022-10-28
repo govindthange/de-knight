@@ -37,6 +37,14 @@ function Chessboard(props) {
       // setTranscript(oldTranscript => [obj, ...oldTranscript]);
     }, []),
 
+    game: useCallback((e, obj) => {
+      console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
+      // setTranscript(oldTranscript => [obj, ...oldTranscript]);
+
+      const game = JSON.parse(obj);
+      alert(obj);
+    }, []),
+
     play: useCallback((e, move) => {
       // alert(`Received '${e}' event w/ ${move} data`);
       console.log('Received %o event w/ %o data', e, move);

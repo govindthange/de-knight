@@ -87,4 +87,10 @@ io.on("connection", (socket) => {
     console.log(`move: ${move}, room: ${room}`);
     io.to(room).emit("play", move);
   });
+
+  socket.on("game", (obj) => {
+    const { game, room } = obj;
+    console.log(`game: ${game}, room: ${room}`);
+    io.to(room).emit("game", game);
+  });
 });
