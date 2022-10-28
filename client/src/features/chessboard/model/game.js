@@ -25,19 +25,14 @@ let currentPlayer;
 let multiplayerGame = null;
 let sendGameToRemotePlayer;
 
-export async function start(
-  gameId,
-  currentUser,
-  multiplayerGameObject,
-  fetchRemoteGameById,
-  saveGame,
-  remoteGameObservable
-) {
+export async function start(gameId, currentUser, multiplayerGameObject, saveGame) {
   if (multiplayerGameObject) {
     sendGameToRemotePlayer = saveGame;
 
-    // Fetch the initial remote game object
-    const initialGame = fetchRemoteGameById(gameId);
+    // Fetch the initial from local storage.
+    let initialGameString = window.localStorage.getItem('de-chess/game/remote');
+    const initialGame = JSON.parse(initialGameString || {});
+
     if (!initialGame) {
       alert('The remote game no more exists!');
       return 'no-remote-game-found';
@@ -67,11 +62,7 @@ export async function start(
     }
     chess.reset();
 
-    // Fetch the updated (not the initial one) remote game object.
-    // If it was player #2, the game object would have been updated
-    // by the 1st if-condition above.
-    applyRemotePlayerGame(currentUser, fetchRemoteGameById(gameId));
-    // applyRemotePlayerGame(currentUser, multiplayerGame);
+    applyRemotePlayerGame(currentUser, initialGame);
 
     // const gameObject = await multiplayerGameObject().then(obj => obj.currentGame);
 

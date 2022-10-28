@@ -88,22 +88,6 @@ function Chessboard(props) {
     });
   });
 
-  //
-  // If URL contains a game UID then fetch
-  // the initial remote game object.
-  //
-  const fetchRemoteGameById = new useCallback(
-    id => {
-      dispatch(fetchGame);
-
-      let str = window.localStorage.getItem('de-chess/game/remote');
-      let game = JSON.parse(str);
-      console.log('Game fetched locally is: %o', game);
-      return game;
-    },
-    [id]
-  );
-
   const sendGameToRemotePlayer = new useCallback(g => {
     dispatch(setGame(g));
     !g.members && alert('no members to send!');
@@ -117,9 +101,7 @@ function Chessboard(props) {
         id,
         currentUser,
         id !== 'standalone' ? multiplayerGameObjectPromise : null,
-        fetchRemoteGameById,
-        sendGameToRemotePlayer,
-        remoteGameObservable
+        sendGameToRemotePlayer
       );
       if (res) {
         emit('join', id);
