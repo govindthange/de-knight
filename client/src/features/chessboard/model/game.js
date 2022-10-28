@@ -21,9 +21,8 @@ const chess = new Chess();
 
 export let subjectObservable = new BehaviorSubject();
 
-let multiplayerGameId;
 let currentPlayer;
-let multiplayerGame = {};
+let multiplayerGame = null;
 let sendGameToRemotePlayer;
 let players;
 
@@ -36,12 +35,10 @@ export async function start(
   remoteGameObservable
 ) {
   if (multiplayerGameObject) {
-    multiplayerGameId = gameId;
     sendGameToRemotePlayer = saveGame;
 
     // Fetch the initial remote game object
     const initialGame = fetchRemoteGameById(gameId);
-    // console.log('initialGame (before add opponent): %o', initialGame);
     if (!initialGame) {
       alert('The remote game no more exists!');
       return 'no-remote-game-found';
@@ -58,10 +55,8 @@ export async function start(
       };
 
       players = [...initialGame.members, player2];
-      // multiplayerGame = {...initialGame, members: players, status: 'ready'};
-      multiplayerGame = {...Object.assign(multiplayerGame, {members: players, status: 'ready'})};
 
-      console.log('MULTIPLAYERGAME 1' + JSON.stringify(multiplayerGame));
+      multiplayerGame = Object.assign(initialGame, {id: gameId, members: players, status: 'ready'});
       sendGameToRemotePlayer(multiplayerGame);
     }
     // If the current game is not in waiting and you are not in the members list
@@ -69,13 +64,9 @@ export async function start(
       alert('The game is not in waiting state and you are not in members list');
       return 'intruder';
     } else if (initialGame.status === 'waiting') {
-      multiplayerGame = fetchRemoteGameById(gameId);
+      multiplayerGame = Object.assign(initialGame, {id: gameId});
       players = multiplayerGame.members;
-      alert(multiplayerGame.members.length);
     }
-    // alert(multiplayerGame);
-    console.log('MULTIPLAYERGAME 2' + JSON.stringify(multiplayerGame));
-    // console.log('initialGame (after add opponent): %o', initialGame);
     chess.reset();
 
     // Fetch the updated (not the initial one) remote game object.
@@ -120,7 +111,7 @@ export async function start(
 
     return 'set observable w.r.t. REMOTE player state. ';
   } else {
-    multiplayerGameId = null;
+    multiplayerGame = null;
     currentPlayer = null;
     sendGameToRemotePlayer = null;
 
@@ -139,7 +130,7 @@ export async function start(
 }
 
 export function reset() {
-  if (multiplayerGameId) {
+  if (multiplayerGame) {
     updateSubject(null, true);
     chess.reset();
   } else {
@@ -151,7 +142,7 @@ export function reset() {
 function updateSubject(pendingPromotion, reset) {
   const isGameOver = chess.game_over();
 
-  if (multiplayerGameId) {
+  if (multiplayerGame) {
     const updatedData = {
       ...multiplayerGame,
       gameData: chess.fen(),
@@ -163,7 +154,7 @@ function updateSubject(pendingPromotion, reset) {
     }
 
     updatedData.members = players;
-    alert('updateSubject. players:' + players.length);
+    //alert('updateSubject. players:' + players.length);
 
     localStorage.setItem('de-chess/game/remote/data', JSON.stringify(updatedData));
     console.log(`before multiplayer game: ${JSON.stringify(multiplayerGame)}`);
@@ -270,7 +261,7 @@ export function move(from, to, promotion) {
     theMove.promotion = promotion;
   }
 
-  if (multiplayerGameId) {
+  if (multiplayerGame) {
     if (currentPlayer.piece === chess.turn()) {
       // .move() won't work for a pawns on verge of being promoted.
       const isMoveAllowed = chess.move(theMove);
