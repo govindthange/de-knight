@@ -19,6 +19,10 @@ function useSocketIo(listnerMap) {
       console.log(`websocket has received message ${JSON.stringify(obj)}`);
       listnerMap['chat']('chat', obj);
     }, []),
+    game: useCallback(obj => {
+      console.log(`websocket has received message ${JSON.stringify(obj)}`);
+      listnerMap['game']('game', obj);
+    }, []),
     play: useCallback(obj => {
       console.log(`websocket has received message ${JSON.stringify(obj)}`);
       listnerMap['play']('play', obj);
@@ -31,6 +35,7 @@ function useSocketIo(listnerMap) {
     socket.on('connect', onConnectMemoizedCallback);
     socket.on('disconnect', onDisconnectMemoizedCallback);
     socket.on('chat', memoizedListnerMap['chat']);
+    socket.on('game', memoizedListnerMap['game']);
     socket.on('play', memoizedListnerMap['play']);
 
     return () => {
@@ -38,6 +43,7 @@ function useSocketIo(listnerMap) {
       socket.off('connect');
       socket.off('disconnect');
       socket.off('chat');
+      socket.off('game');
       socket.off('play');
     };
   }, []);
