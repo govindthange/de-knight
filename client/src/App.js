@@ -21,8 +21,8 @@ function App() {
           <Home></Home>
         </Route>
         <Route path="/play/:id">
-          <SocketIoDemo />
           <Chessboard></Chessboard>
+          <SocketIoDemo />
         </Route>
       </Switch>
     </Router>

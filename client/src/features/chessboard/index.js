@@ -3,14 +3,7 @@ import Board from './components/Board';
 import {useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  getCurrentPlayer,
-  getPosition,
-  setPosition,
-  getGame,
-  setGame,
-  fetchGame
-} from './chessboardSlice';
+import {getCurrentPlayer, getPosition, getGame, setGame} from './chessboardSlice';
 import {
   subjectObservable as chessSubject,
   start as startChess,
@@ -20,11 +13,9 @@ import {
 } from './model/game';
 import useSocketIo from '../../hooks/useSocketIo';
 import {getAuthenticatedUser} from '../authentication/authenticationSlice';
-import {BehaviorSubject} from 'rxjs';
 
 function Chessboard(props) {
   const currentUser = useSelector(getAuthenticatedUser);
-  const currentPlayer = useSelector(getCurrentPlayer);
   const currentGame = useSelector(getGame);
   const [board, setBoard] = useState([]);
   const [isGameOver, setIsGameOver] = useState();
@@ -38,19 +29,6 @@ function Chessboard(props) {
   const dispatch = useDispatch();
   const currentPosition = useSelector(getPosition);
   const sharebleLink = window.location.href;
-
-  const remoteGameObservable = new BehaviorSubject();
-
-  //
-  // Simulate remote player's move
-  //
-  const simulateRemoteUser = () => {
-    dispatch(fetchGame);
-    let str = window.localStorage.getItem('de-chess/game/remote');
-    let game = JSON.parse(str);
-    console.log('Game fetched locally is: %o', game);
-    remoteGameObservable.next(game);
-  };
 
   // Get memoized callbacks.
   const listenerMap = {
@@ -155,14 +133,6 @@ function Chessboard(props) {
   return (
     <>
       <a href="../">Go to root page....</a>
-      <button className="button is-info" onClick={simulateRemoteUser}>
-        Simulate remote player move
-      </button>
-      <div>Chessboard.currentPosition: {currentPosition}</div>
-      <div>{loading && <div>'Loading...'</div>}</div>
-      <div>{!loading && <div>'Loaded remote player data'</div>}</div>
-      <div>Chessboard.initResult: {initResult}</div>
-      <div>Chessboard.status: {status}</div>
       <div className="chessboard">
         <div className="board-container">
           {gameObject.oponent && gameObject.oponent.name && (
@@ -196,6 +166,13 @@ function Chessboard(props) {
           </div>
         </div>
       )}
+      <div>Chessboard.currentPosition: {currentPosition}</div>
+      <div>{!isConnected && <div>Connecting to remote server...</div>}</div>
+      <div>{isConnected && <div>Connected to remote server.</div>}</div>
+      <div>{loading && <div>'Loading...'</div>}</div>
+      <div>{!loading && <div>'Loaded remote player data'</div>}</div>
+      <div>Chessboard.initResult: {initResult}</div>
+      <div>Chessboard.status: {status}</div>
     </>
   );
 }

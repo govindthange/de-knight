@@ -1,6 +1,5 @@
 import * as Chess from 'chess.js';
 import {BehaviorSubject} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
 
 //
 // FEN position to test various scenarios
@@ -63,40 +62,6 @@ export async function start(gameId, currentUser, multiplayerGameObject, saveGame
     chess.reset();
 
     applyRemotePlayerGame(currentUser, initialGame);
-
-    // const gameObject = await multiplayerGameObject().then(obj => obj.currentGame);
-
-    // // TODO: We need to put rxjs observable that wraps
-    // // response from the socket client - play events.
-    // // REmove new BehaviorSubject() call after you add it.
-    // subjectObservable = remoteGameObservable.pipe(
-    //   //tap(v => console.log('Tap value: %o', v)),
-    //   map(obj => {
-    //     const game = obj;
-    //     console.log('MAP this %o', obj);
-    //     if (!game) return;
-    //     // alert(game);
-    //     // alert(JSON.stringify(game));
-    //     const {pendingPromotion, gameData, ...restOfGame} = game;
-    //     const member = game.members.find(m => m.uid === currentUser.uid);
-    //     const oponent = game.members.find(m => m.uid !== currentUser.uid);
-    //     if (gameData) {
-    //       chess.load(gameData);
-    //     }
-    //     const isGameOver = chess.game_over();
-
-    //     return {
-    //       board: chess.board(),
-    //       pendingPromotion,
-    //       isGameOver,
-    //       position: member.piece,
-    //       member,
-    //       oponent,
-    //       result: isGameOver ? getResult() : null,
-    //       ...restOfGame
-    //     };
-    //   })
-    // );
 
     return 'set observable w.r.t. REMOTE player state. ';
   } else {
