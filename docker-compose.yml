@@ -63,6 +63,7 @@ services:
       - 8989:8989
     environment:
       - WS_PORT=${WS_PORT}
+      - CORS_ALLOWED_DOMAIN=${CORS_ALLOWED_DOMAIN}
       - TEST_PORT=8989
     # Following command will start a pong server to test the reachability within the workspaces.
     # command: sh -c "node /workspace/ws-server/pong/pong.js 2> /workspace/ws-server/pong/pong.err > /workspace/ws-server/pong/pong.log"
