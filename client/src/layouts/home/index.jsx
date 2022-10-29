@@ -25,6 +25,7 @@ function Home() {
   });
 
   const listenerMap = {
+    command: defaultMemoizedHandler,
     chat: defaultMemoizedHandler,
     game: defaultMemoizedHandler,
     play: defaultMemoizedHandler
