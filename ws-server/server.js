@@ -28,6 +28,8 @@ const io = new Server(httpServer, {
 httpServer.listen(process.env.WS_PORT);
 
 io.on("connection", (socket) => {
+  const games = new Map();
+
   console.log(`Connected: ${socket.id}`);
 
   // Capture and print protocol version here.
@@ -84,13 +86,45 @@ io.on("connection", (socket) => {
 
   socket.on("play", (obj) => {
     const { move, room } = obj;
+
+    const moveObj = JSON.parse(move);
+    if (moveObj) {
+      console.log(`Updating ${JSON.stringify(moveObj)} under room '${room}'`);
+      games.set(room, moveObj);
+    }
+
     console.log(`move: ${move}, room: ${room}`);
     io.to(room).emit("play", move);
   });
 
-  socket.on("game", (obj) => {
-    const { game, room } = obj;
-    console.log(`game: ${game}, room: ${room}`);
-    io.to(room).emit("game", game);
+  socket.on("command", (obj) => {
+    const { command, room } = obj;
+    const cmdObj = JSON.parse(command);
+
+    switch (cmdObj.type) {
+      case "save":
+        console.log(
+          `Saving ${JSON.stringify(cmdObj.game)} under room '${room}'`
+        );
+        games.set(room, cmdObj.game);
+        break;
+      case "delete":
+        console.log(
+          `Deleting ${JSON.stringify(cmdObj.game)} for room '${room}'`
+        );
+        games.delete(room);
+        break;
+      case "query":
+        let game = JSON.stringify(games.get(room));
+        if (!game) {
+          game = { error: `No game found w/ id = ${room}` };
+        }
+
+        console.log(`Sending ${game} to room '${room}'`);
+        io.to(room).emit("game", game);
+        break;
+      default:
+        console.log(`Command type '${command}' not supported`);
+    }
   });
 });
