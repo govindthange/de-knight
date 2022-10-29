@@ -14,17 +14,26 @@ function useSocketIo(listnerMap) {
     console.log('websocket has disconnected!');
   }, []);
 
+  // const memoizedCallback = useCallback((e, o) => {
+  //   listnerMap[e](e, o);
+  // });
+
+  // TODO: This map needs to be set conditionally.
   const memoizedListnerMap = {
+    command: useCallback(obj => {
+      console.log(`websocket received COMMAND event ${JSON.stringify(obj)}`);
+      listnerMap['command']('command', obj);
+    }, []),
     chat: useCallback(obj => {
-      console.log(`websocket has received message ${JSON.stringify(obj)}`);
+      console.log(`websocket received CHAT event ${JSON.stringify(obj)}`);
       listnerMap['chat']('chat', obj);
     }, []),
     game: useCallback(obj => {
-      console.log(`websocket has received message ${JSON.stringify(obj)}`);
+      console.log(`websocket received GAME event ${JSON.stringify(obj)}`);
       listnerMap['game']('game', obj);
     }, []),
     play: useCallback(obj => {
-      console.log(`websocket has received message ${JSON.stringify(obj)}`);
+      console.log(`websocket received PLAY event ${JSON.stringify(obj)}`);
       listnerMap['play']('play', obj);
     }, [])
   };
@@ -34,6 +43,7 @@ function useSocketIo(listnerMap) {
 
     socket.on('connect', onConnectMemoizedCallback);
     socket.on('disconnect', onDisconnectMemoizedCallback);
+    socket.on('command', memoizedListnerMap['command']);
     socket.on('chat', memoizedListnerMap['chat']);
     socket.on('game', memoizedListnerMap['game']);
     socket.on('play', memoizedListnerMap['play']);
@@ -42,6 +52,7 @@ function useSocketIo(listnerMap) {
       console.log('clearing all websocket listeners!');
       socket.off('connect');
       socket.off('disconnect');
+      socket.off('command');
       socket.off('chat');
       socket.off('game');
       socket.off('play');
@@ -50,7 +61,7 @@ function useSocketIo(listnerMap) {
 
   const emit = (event, obj) => {
     socket.emit(event, obj);
-    console.log(`websocket emitted ${event} w/ ${JSON.stringify(obj)}`);
+    console.log(`websocket emitted ${event.toUpperCase()} w/ ${JSON.stringify(obj)}`);
   };
 
   return {isConnected, emit};
