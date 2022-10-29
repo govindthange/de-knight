@@ -67,6 +67,13 @@ function Chessboard(props) {
 
   const {isConnected, emit} = useSocketIo(listenerMap);
 
+  const requestRemoteGameById = useCallback(
+    gameId => {
+      return fetch(`http://localhost:3000/game/${gameId}`).then(response => response.json());
+    },
+    [id, emit]
+  );
+
   // Some dummy response received from socket server.
   const dummyResponse = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
   const multiplayerGameObjectPromise = new Promise((resolve, reject) => {
@@ -94,7 +101,7 @@ function Chessboard(props) {
       const res = await startChess(
         id,
         currentUser,
-        id !== 'standalone' ? multiplayerGameObjectPromise : null,
+        id !== 'standalone' ? requestRemoteGameById : null,
         sendGameToRemotePlayer
       );
       if (res) {

@@ -27,10 +27,15 @@ let sendGameToRemotePlayer;
 export async function start(gameId, currentUser, multiplayerGameObject, saveGame) {
   if (multiplayerGameObject) {
     sendGameToRemotePlayer = saveGame;
-
-    // Fetch the initial from local storage.
+    /*
+    // TODO: this object cannot come from local storage.
     let initialGameString = window.localStorage.getItem('de-chess/game/remote');
     const initialGame = JSON.parse(initialGameString || {});
+*/
+    const initialGame = await multiplayerGameObject(gameId).then(obj => {
+      alert('Response received within start(): ' + JSON.stringify(obj));
+      return obj;
+    });
 
     if (!initialGame) {
       alert('The remote game no more exists!');
