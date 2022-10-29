@@ -1,6 +1,6 @@
 import './index.css';
 import React from 'react';
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import * as uuid from 'uuid';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
@@ -11,13 +11,26 @@ import {
 } from '../../features/chessboard/chessboardSlice';
 import {getAuthenticatedUser} from '../../features/authentication/authenticationSlice';
 import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
+import useSocketIo from '../../hooks/useSocketIo';
 
 function Home() {
   const authenticatedUser = useSelector(getAuthenticatedUser);
   const currentPlayer = useSelector(getCurrentPlayer);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const history = useHistory(); // Get memoized callbacks.
+
+  const defaultMemoizedHandler = useCallback((e, obj) => {
+    console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
+  });
+
+  const listenerMap = {
+    chat: defaultMemoizedHandler,
+    game: defaultMemoizedHandler,
+    play: defaultMemoizedHandler
+  };
+
+  const {isConnected, emit} = useSocketIo(listenerMap);
 
   const newGameOptions = [
     {label: 'Black pieces', value: 'b'},
@@ -34,7 +47,7 @@ function Home() {
     };
 
     dispatch(setCurrentPlayer(member));
-    history.push(`/play/local`);
+    history.push(`/play/standalone`);
     // TODO: play w/ yourself.
   };
 
@@ -56,6 +69,9 @@ function Home() {
       gameId: `${uuid.v4()}`
     };
 
+    let req = {type: 'save', gameId: game.gameId, game};
+    emit('command', {room: game.gameId, command: JSON.stringify(req)});
+
     dispatch(setGame(game)); // TODO: the gameObject should be saved under gameId
     dispatch(setCurrentPlayer(member)); // TODO: saving currentPlayer may not be needed since we are saving in in game object!
 
@@ -76,6 +92,8 @@ function Home() {
           </button>
         </div>
       </div>
+      <div>{!isConnected && <div>Connecting to remote server...</div>}</div>
+      <div>{isConnected && <div>Connected to remote server.</div>}</div>
       <div className={`modal ${showModal ? 'is-active' : ''}`}>
         <div className="modal-background"></div>
         <div className="modal-content">
