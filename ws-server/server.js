@@ -1,10 +1,19 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
-// import { readFileSync } from "fs";
+import express from "express";
+import cors from "cors";
 
+const app = express();
+app.use(
+  cors({
+    origin: process.env.CORS_ALLOWED_DOMAIN,
+  })
+);
+
+console.log(`Allowed domain: ${process.env.CORS_ALLOWED_DOMAIN}`);
+
+/*
 // Ref: https://socket.io/docs/v4/client-options/
-
-const games = new Map();
 
 const httpServer = createServer({
   // Test following w/ a self-signed certificate
@@ -16,6 +25,10 @@ const httpServer = createServer({
   // requestCert: true,
   // ca: [readFileSync("client-cert.pem")],
 });
+*/
+
+const httpServer = createServer(app);
+
 const io = new Server(httpServer, {
   path: "/de-chess/multiplayer/",
   cors: {
@@ -25,6 +38,29 @@ const io = new Server(httpServer, {
     // origin: "https://de-chess-production-server.com",
     // credentials: true
   },
+});
+
+const games = new Map();
+
+app.get("/game/:room", function (req, res) {
+  const room = req.params.room;
+  console.log("HTTP Request for room: " + room);
+
+  let result = { error: "No data to process!" };
+  if (room) {
+    result = games.get(room);
+    if (!result) {
+      result = { error: `No game found w/ id = ${room}` };
+    }
+  } else {
+    result = { error: `No game-id/room passed!` };
+  }
+
+  console.log(`Sending ${JSON.stringify(result)} to room '${room}'`);
+
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.write(JSON.stringify(result));
+  res.end();
 });
 
 httpServer.listen(process.env.WS_PORT);
