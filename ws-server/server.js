@@ -4,6 +4,8 @@ import { Server } from "socket.io";
 
 // Ref: https://socket.io/docs/v4/client-options/
 
+const games = new Map();
+
 const httpServer = createServer({
   // Test following w/ a self-signed certificate
   // cert: readFileSync("./cert.pem"),
@@ -28,8 +30,6 @@ const io = new Server(httpServer, {
 httpServer.listen(process.env.WS_PORT);
 
 io.on("connection", (socket) => {
-  const games = new Map();
-
   console.log(`Connected: ${socket.id}`);
 
   // Capture and print protocol version here.
@@ -76,12 +76,14 @@ io.on("connection", (socket) => {
   socket.on("join", (room) => {
     console.log(`Socket ${socket.id} joining ${room}`);
     socket.join(room);
+    console.log("Total Games: ", games.size);
   });
 
   socket.on("chat", (obj) => {
     const { message, room } = obj;
     console.log(`msg: ${message}, room: ${room}`);
     io.to(room).emit("chat", message);
+    console.log("Total Games: ", games.size);
   });
 
   socket.on("play", (obj) => {
@@ -95,11 +97,13 @@ io.on("connection", (socket) => {
 
     console.log(`move: ${move}, room: ${room}`);
     io.to(room).emit("play", move);
+    console.log("Total Games: ", games.size);
   });
 
   socket.on("command", (obj) => {
     const { command, room } = obj;
     const cmdObj = JSON.parse(command);
+    io.to(room).emit("command", command);
 
     switch (cmdObj.type) {
       case "save":
@@ -107,6 +111,7 @@ io.on("connection", (socket) => {
           `Saving ${JSON.stringify(cmdObj.game)} under room '${room}'`
         );
         games.set(room, cmdObj.game);
+        console.log("Total Games: ", games.size);
         break;
       case "delete":
         console.log(
@@ -120,11 +125,13 @@ io.on("connection", (socket) => {
           game = { error: `No game found w/ id = ${room}` };
         }
 
-        console.log(`Sending ${game} to room '${room}'`);
+        console.log(`Sending ${JSON.stringify(game)} to room '${room}'`);
         io.to(room).emit("game", game);
+        // io.to(room).emit("chat", "command");
         break;
       default:
         console.log(`Command type '${command}' not supported`);
     }
+    console.log("Total Games: ", games.size);
   });
 });
