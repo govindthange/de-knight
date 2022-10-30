@@ -41,7 +41,7 @@ function Chessboard(props) {
 
   const {isConnected, emit} = useSocketIo(listenerMap);
 
-  const requestRemoteGameById = useCallback(gameId => {
+  const fetchGameById = useCallback(gameId => {
     return fetch(`http://localhost:3000/game/${gameId}`).then(response => response.json());
   }, []);
 
@@ -57,7 +57,7 @@ function Chessboard(props) {
       const res = await startChess(
         id,
         currentUser,
-        id !== 'standalone' ? requestRemoteGameById : null,
+        id !== 'standalone' ? fetchGameById : null,
         sendGameToRemotePlayer
       );
       if (res) {

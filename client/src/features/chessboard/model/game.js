@@ -24,11 +24,11 @@ let currentPlayer;
 let multiplayerGame = null;
 let sendGameToRemotePlayer;
 
-export async function start(gameId, currentUser, multiplayerGameObject, saveGame) {
-  if (multiplayerGameObject) {
+export async function start(gameId, currentUser, fetchGameById, saveGame) {
+  if (fetchGameById) {
     sendGameToRemotePlayer = saveGame;
 
-    const initialGame = await multiplayerGameObject(gameId).then(obj => {
+    const initialGame = await fetchGameById(gameId).then(obj => {
       return obj;
     });
 
