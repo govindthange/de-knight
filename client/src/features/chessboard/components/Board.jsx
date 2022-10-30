@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import BoardTile from './BoardTile';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+import {DndProvider} from 'react-dnd';
 
 export default function Board({board, turnBoard}) {
   const [currentBoard, setCurrentBoard] = useState([]);
@@ -29,13 +31,15 @@ export default function Board({board, turnBoard}) {
 
   return (
     <>
-      <div className="board">
-        {currentBoard.flat().map((piece, i) => (
-          <div key={i} className="board-tile">
-            <BoardTile piece={piece} dark={isDark(i)} position={getPosition(i)} />
-          </div>
-        ))}
-      </div>
+      <DndProvider backend={HTML5Backend}>
+        <div className="board">
+          {currentBoard.flat().map((piece, i) => (
+            <div key={i} className="board-tile">
+              <BoardTile piece={piece} dark={isDark(i)} position={getPosition(i)} />
+            </div>
+          ))}
+        </div>
+      </DndProvider>
     </>
   );
 }
