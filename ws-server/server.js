@@ -1,9 +1,12 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
 import express from "express";
+import bodyParser from "body-parser";
 import cors from "cors";
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(
   cors({
     origin: process.env.CORS_ALLOWED_DOMAIN,
@@ -44,7 +47,7 @@ const games = new Map();
 
 app.get("/game/:room", function (req, res) {
   const room = req.params.room;
-  console.log("HTTP Request for room: " + room);
+  console.log(`Get game for room ${room} room`);
 
   let result = { error: "No data to process!" };
   if (room) {
@@ -61,6 +64,13 @@ app.get("/game/:room", function (req, res) {
   res.writeHead(200, { "Content-Type": "application/json" });
   res.write(JSON.stringify(result));
   res.end();
+});
+
+app.post("/game/:room", function (req, res) {
+  const room = req.params.room;
+  console.log(`Save game for room ${room} room`);
+  games.set(room, req.body);
+  res.send("{status: success, code: 200}");
 });
 
 httpServer.listen(process.env.WS_PORT);
