@@ -27,13 +27,8 @@ let sendGameToRemotePlayer;
 export async function start(gameId, currentUser, multiplayerGameObject, saveGame) {
   if (multiplayerGameObject) {
     sendGameToRemotePlayer = saveGame;
-    /*
-    // TODO: this object cannot come from local storage.
-    let initialGameString = window.localStorage.getItem('de-chess/game/remote');
-    const initialGame = JSON.parse(initialGameString || {});
-*/
+
     const initialGame = await multiplayerGameObject(gameId).then(obj => {
-      alert('Response received within start(): ' + JSON.stringify(obj));
       return obj;
     });
 
@@ -59,7 +54,7 @@ export async function start(gameId, currentUser, multiplayerGameObject, saveGame
     }
     // If the current game is not in waiting and you are not in the members list
     else if (!initialGame.members.map(m => m.uid).includes(currentUser.uid)) {
-      alert('The game is not in waiting state and you are not in members list');
+      alert('The game is not in waiting state and you are not in the members list');
       return 'intruder';
     } else if (initialGame.status === 'waiting') {
       multiplayerGame = Object.assign(initialGame, {id: gameId});
@@ -68,7 +63,7 @@ export async function start(gameId, currentUser, multiplayerGameObject, saveGame
 
     applyRemotePlayerGame(currentUser, initialGame);
 
-    return 'set observable w.r.t. REMOTE player state. ';
+    return 'multiplayer-game-object-ready';
   } else {
     multiplayerGame = null;
     currentPlayer = null;
@@ -80,7 +75,7 @@ export async function start(gameId, currentUser, multiplayerGameObject, saveGame
     }
 
     updateSubject();
-    return 'set observable w.r.t. STANDALONE player state. ';
+    return 'standalone-game-object-ready';
   }
 }
 
