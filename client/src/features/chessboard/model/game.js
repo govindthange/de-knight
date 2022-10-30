@@ -112,7 +112,7 @@ function updateSubject(pendingPromotion, reset) {
     const updatedSubject = {
       board: chess.board(),
       pendingPromotion,
-      turnChessboard: chess.turn(),
+      position: chess.turn(),
       isGameOver,
       result: isGameOver ? getResult() : null
     };
@@ -155,7 +155,7 @@ export function applyRemotePlayerGame(currentUser, game) {
     board: chess.board(),
     pendingPromotion,
     isGameOver,
-    turnChessboard: member.piece,
+    position: member.piece,
     member,
     oponent,
     result: isGameOver ? getResult() : null,

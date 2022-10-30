@@ -21,7 +21,7 @@ function Chessboard(props) {
   const [board, setBoard] = useState([]);
   const [isGameOver, setIsGameOver] = useState();
   const [result, setResult] = useState();
-  const [turnChessboard, setTurnChessboard] = useState(); // TODO: rename turnChessboard to position
+  const [position, setPosition] = useState();
   const [initResult, setInitResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState('');
@@ -92,7 +92,7 @@ function Chessboard(props) {
           setBoard(g.board);
           setIsGameOver(g.isGameOver);
           setResult(getResult());
-          setTurnChessboard(g.turnChessboard); // TODO: rename turnChessboard to position
+          setPosition(g.position); // TODO: rename position to position
           setStatus(g.status);
           setGameObject(g);
         });
@@ -116,7 +116,7 @@ function Chessboard(props) {
             <span className="tag is-link">{gameObject.oponent.name}</span>
           )}
 
-          <Board board={board} turnBoard={turnChessboard} />
+          <Board board={board} turnBoard={position} />
           {gameObject.member && gameObject.member.name && (
             <span className="tag is-link">{gameObject.member.name}</span>
           )}
