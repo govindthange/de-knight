@@ -7,12 +7,14 @@ import {setGame} from './chessboardSlice';
 import {
   subjectObservable as chessSubject,
   start as startChess,
-  reset as restartChess,
   applyRemotePlayerGame,
   getResult
 } from './model/game';
 import useSocketIo from '../../hooks/useSocketIo';
 import {getAuthenticatedUser} from '../authentication/authenticationSlice';
+import {SharableLink} from './components/SharableLink';
+import {Status} from './components/Status';
+import {Result} from './components/Result';
 
 function Chessboard(props) {
   const currentUser = useSelector(getAuthenticatedUser);
@@ -26,7 +28,6 @@ function Chessboard(props) {
   const [gameObject, setGameObject] = useState({});
   const {id} = useParams();
   const dispatch = useDispatch();
-  const sharebleLink = window.location.href;
 
   // Get memoized callbacks.
   const listenerMap = {
@@ -61,12 +62,9 @@ function Chessboard(props) {
 
   const {isConnected, emit} = useSocketIo(listenerMap);
 
-  const requestRemoteGameById = useCallback(
-    gameId => {
-      return fetch(`http://localhost:3000/game/${gameId}`).then(response => response.json());
-    },
-    [id, emit]
-  );
+  const requestRemoteGameById = useCallback(gameId => {
+    return fetch(`http://localhost:3000/game/${gameId}`).then(response => response.json());
+  }, []);
 
   const sendGameToRemotePlayer = new useCallback(g => {
     dispatch(setGame(g));
@@ -108,33 +106,10 @@ function Chessboard(props) {
     return () => subscription && subscription.unsubscribe();
   }, [id]);
 
-  async function copyToClipboard() {
-    await navigator.clipboard.writeText(sharebleLink);
-  }
-
-  let statusContent;
-  if (isGameOver) {
-    statusContent = (
-      <button onClick={() => restartChess()}>
-        <span>New Game</span>
-      </button>
-    );
-  } else {
-    statusContent = (
-      <button onClick={() => restartChess()}>
-        <span>Reset Game</span>
-      </button>
-    );
-  }
-
-  let resultContent;
-  if (result) {
-    resultContent = <p>{result}</p>;
-  }
-
   return (
     <>
       <a href="../">Go to root page....</a>
+      <Result isGameOver={isGameOver} result={result}></Result>
       <div className="chessboard">
         <div className="board-container">
           {gameObject.oponent && gameObject.oponent.name && (
@@ -147,33 +122,12 @@ function Chessboard(props) {
           )}
         </div>
       </div>
-      <div className="chessboard-status">
-        {resultContent}
-        {statusContent}
-      </div>
-      {status === 'waiting' && (
-        <div className="notification is-link share-game">
-          <strong>Share this game to continue</strong>
-          <br />
-          <br />
-          <div className="field has-addons">
-            <div className="control is-expanded">
-              <input type="text" name="" id="" className="input" readOnly value={sharebleLink} />
-            </div>
-            <div className="control">
-              <button className="button is-info" onClick={copyToClipboard}>
-                Copy
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      <div>{!isConnected && <div>Connecting to remote server...</div>}</div>
-      <div>{isConnected && <div>Connected to remote server.</div>}</div>
-      <div>{loading && <div>'Loading...'</div>}</div>
-      <div>{!loading && <div>'Loaded remote player data'</div>}</div>
-      <div>Chessboard.initResult: {initResult}</div>
-      <div>Chessboard.status: {status}</div>
+      {status === 'waiting' && <SharableLink />}
+      <Status
+        initResult={initResult}
+        loading={loading}
+        status={status}
+        isConnected={isConnected}></Status>
     </>
   );
 }
