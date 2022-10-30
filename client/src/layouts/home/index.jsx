@@ -1,37 +1,18 @@
 import './index.css';
 import React from 'react';
-import {useCallback, useState} from 'react';
+import {useState} from 'react';
 import * as uuid from 'uuid';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import {
-  getCurrentPlayer,
-  setCurrentPlayer,
-  setGame
-} from '../../features/chessboard/chessboardSlice';
+import {setCurrentPlayer, setGame} from '../../features/chessboard/chessboardSlice';
 import {getAuthenticatedUser} from '../../features/authentication/authenticationSlice';
 import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
-import useSocketIo from '../../hooks/useSocketIo';
 
 function Home() {
   const authenticatedUser = useSelector(getAuthenticatedUser);
-  const currentPlayer = useSelector(getCurrentPlayer);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const history = useHistory(); // Get memoized callbacks.
-
-  const defaultMemoizedHandler = useCallback((e, obj) => {
-    console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
-  });
-
-  const listenerMap = {
-    command: defaultMemoizedHandler,
-    chat: defaultMemoizedHandler,
-    game: defaultMemoizedHandler,
-    play: defaultMemoizedHandler
-  };
-
-  const {isConnected, emit} = useSocketIo(listenerMap);
+  const history = useHistory();
 
   const newGameOptions = [
     {label: 'Black pieces', value: 'b'},
@@ -40,16 +21,7 @@ function Home() {
   ];
 
   const onPlayLocally = () => {
-    const member = {
-      uid: currentPlayer.uid,
-      piece: 'w',
-      name: currentPlayer.name,
-      creator: true
-    };
-
-    dispatch(setCurrentPlayer(member));
     history.push(`/play/standalone`);
-    // TODO: play w/ yourself.
   };
 
   const onPlayOnline = () => {
@@ -70,13 +42,17 @@ function Home() {
       gameId: `${uuid.v4()}`
     };
 
-    let req = {type: 'save', gameId: game.gameId, game};
-    emit('command', {room: game.gameId, command: JSON.stringify(req)});
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(game)
+    };
+    fetch(`http://localhost:3000/game/${game.gameId}`, requestOptions).then(res => {
+      dispatch(setGame(game));
+      dispatch(setCurrentPlayer(member));
 
-    dispatch(setGame(game)); // TODO: the gameObject should be saved under gameId
-    dispatch(setCurrentPlayer(member)); // TODO: saving currentPlayer may not be needed since we are saving in in game object!
-
-    history.push(`/play/${game.gameId}`);
+      history.push(`/play/${game.gameId}`);
+    });
   };
 
   return (
@@ -93,8 +69,6 @@ function Home() {
           </button>
         </div>
       </div>
-      <div>{!isConnected && <div>Connecting to remote server...</div>}</div>
-      <div>{isConnected && <div>Connected to remote server.</div>}</div>
       <div className={`modal ${showModal ? 'is-active' : ''}`}>
         <div className="modal-background"></div>
         <div className="modal-content">
