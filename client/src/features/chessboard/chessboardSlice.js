@@ -1,5 +1,4 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {sub} from 'date-fns';
 
 const chessboardSlice = createSlice({
   name: 'chessboard',

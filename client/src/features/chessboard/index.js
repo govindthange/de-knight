@@ -31,23 +31,6 @@ function Chessboard(props) {
 
   // Get memoized callbacks.
   const listenerMap = {
-    command: useCallback((e, obj) => {
-      console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
-      // setTranscript(oldTranscript => [obj, ...oldTranscript]);
-    }, []),
-
-    chat: useCallback((e, obj) => {
-      console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
-      // setTranscript(oldTranscript => [obj, ...oldTranscript]);
-    }, []),
-
-    game: useCallback((e, obj) => {
-      console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
-      // setTranscript(oldTranscript => [obj, ...oldTranscript]);
-
-      const game = JSON.parse(obj);
-    }, []),
-
     play: useCallback((e, move) => {
       // alert(`Received '${e}' event w/ ${move} data`);
       console.log('Received %o event w/ %o data', e, move);
@@ -92,7 +75,7 @@ function Chessboard(props) {
           setBoard(g.board);
           setIsGameOver(g.isGameOver);
           setResult(getResult());
-          setPosition(g.position); // TODO: rename position to position
+          setPosition(g.position);
           setStatus(g.status);
           setGameObject(g);
         });

@@ -14,27 +14,22 @@ function useSocketIo(listnerMap) {
     console.log('websocket has disconnected!');
   }, []);
 
-  // const memoizedCallback = useCallback((e, o) => {
-  //   listnerMap[e](e, o);
-  // });
-
-  // TODO: This map needs to be set conditionally.
   const memoizedListnerMap = {
     command: useCallback(obj => {
-      console.log(`websocket received COMMAND event ${JSON.stringify(obj)}`);
-      listnerMap['command']('command', obj);
+      // console.log(`websocket received COMMAND event ${JSON.stringify(obj)}`);
+      listnerMap['command'] && listnerMap['command']('command', obj);
     }, []),
     chat: useCallback(obj => {
-      console.log(`websocket received CHAT event ${JSON.stringify(obj)}`);
-      listnerMap['chat']('chat', obj);
+      // console.log(`websocket received CHAT event ${JSON.stringify(obj)}`);
+      listnerMap['chat'] && listnerMap['chat']('chat', obj);
     }, []),
     game: useCallback(obj => {
-      console.log(`websocket received GAME event ${JSON.stringify(obj)}`);
-      listnerMap['game']('game', obj);
+      // console.log(`websocket received GAME event ${JSON.stringify(obj)}`);
+      listnerMap['game'] && listnerMap['game']('game', obj);
     }, []),
     play: useCallback(obj => {
-      console.log(`websocket received PLAY event ${JSON.stringify(obj)}`);
-      listnerMap['play']('play', obj);
+      // console.log(`websocket received PLAY event ${JSON.stringify(obj)}`);
+      listnerMap['play'] && listnerMap['play']('play', obj);
     }, [])
   };
 
