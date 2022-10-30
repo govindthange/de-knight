@@ -4,7 +4,7 @@ import {useState} from 'react';
 import * as uuid from 'uuid';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import {setCurrentPlayer, setGame} from '../../features/chessboard/chessboardSlice';
+import {setGame} from '../../features/chessboard/chessboardSlice';
 import {getAuthenticatedUser} from '../../features/authentication/authenticationSlice';
 import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
 
@@ -49,8 +49,6 @@ function Home() {
     };
     fetch(`http://localhost:3000/game/${game.gameId}`, requestOptions).then(res => {
       dispatch(setGame(game));
-      dispatch(setCurrentPlayer(member));
-
       history.push(`/play/${game.gameId}`);
     });
   };

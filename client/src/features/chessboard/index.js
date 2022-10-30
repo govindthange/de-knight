@@ -3,7 +3,7 @@ import Board from './components/Board';
 import {useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {getCurrentPlayer, getPosition, getGame, setGame} from './chessboardSlice';
+import {setGame} from './chessboardSlice';
 import {
   subjectObservable as chessSubject,
   start as startChess,
@@ -16,7 +16,6 @@ import {getAuthenticatedUser} from '../authentication/authenticationSlice';
 
 function Chessboard(props) {
   const currentUser = useSelector(getAuthenticatedUser);
-  const currentGame = useSelector(getGame);
   const [board, setBoard] = useState([]);
   const [isGameOver, setIsGameOver] = useState();
   const [result, setResult] = useState();
@@ -27,30 +26,25 @@ function Chessboard(props) {
   const [gameObject, setGameObject] = useState({});
   const {id} = useParams();
   const dispatch = useDispatch();
-  const currentPosition = useSelector(getPosition);
   const sharebleLink = window.location.href;
 
   // Get memoized callbacks.
   const listenerMap = {
     command: useCallback((e, obj) => {
-      alert(`Received '${e}' event w/ obj: ` + JSON.stringify(obj));
       console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
       // setTranscript(oldTranscript => [obj, ...oldTranscript]);
     }, []),
 
     chat: useCallback((e, obj) => {
-      alert(`Received '${e}' event w/ obj: ` + JSON.stringify(obj));
       console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
       // setTranscript(oldTranscript => [obj, ...oldTranscript]);
     }, []),
 
     game: useCallback((e, obj) => {
-      alert(`Received '${e}' event w/ obj: ` + JSON.stringify(obj));
       console.log(`Received '${e}' event w/ ${JSON.stringify(obj)} data`);
       // setTranscript(oldTranscript => [obj, ...oldTranscript]);
 
       const game = JSON.parse(obj);
-      alert(obj);
     }, []),
 
     play: useCallback((e, move) => {
@@ -73,21 +67,6 @@ function Chessboard(props) {
     },
     [id, emit]
   );
-
-  // Some dummy response received from socket server.
-  const dummyResponse = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
-  const multiplayerGameObjectPromise = new Promise((resolve, reject) => {
-    resolve({
-      tempPosition: dummyResponse,
-      game: currentGame,
-      member: {
-        uid: 'some-uuid',
-        piece: 'b',
-        name: 'opponent', //localStorage.getItem('de-chess/user'),
-        creator: true
-      }
-    });
-  });
 
   const sendGameToRemotePlayer = new useCallback(g => {
     dispatch(setGame(g));
@@ -189,7 +168,6 @@ function Chessboard(props) {
           </div>
         </div>
       )}
-      <div>Chessboard.currentPosition: {currentPosition}</div>
       <div>{!isConnected && <div>Connecting to remote server...</div>}</div>
       <div>{isConnected && <div>Connected to remote server.</div>}</div>
       <div>{loading && <div>'Loading...'</div>}</div>
