@@ -38,7 +38,7 @@ function Home() {
 
     const game = {
       status: 'waiting',
-      members: [member],
+      players: [member],
       gameId: `${uuid.v4()}`
     };
 

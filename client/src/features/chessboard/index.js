@@ -32,13 +32,9 @@ function Chessboard(props) {
   // Get memoized callbacks.
   const listenerMap = {
     play: useCallback((e, move) => {
-      // alert(`Received '${e}' event w/ ${move} data`);
       console.log('Received %o event w/ %o data', e, move);
-
       const game = JSON.parse(move);
-      // dispatch(setPosition(game));
-      // remoteGameObservable.next(game);
-      !game.members && alert('no members received!');
+      !game.players && alert('No players found!');
       applyRemotePlayerGame(currentUser, game);
     }, [])
   };
@@ -51,7 +47,7 @@ function Chessboard(props) {
 
   const sendGameToRemotePlayer = new useCallback(g => {
     dispatch(setGame(g));
-    !g.members && alert('no members to send!');
+    !g.players && alert('There are no players in the list to send!');
     emit('play', {room: id, move: JSON.stringify(g)});
   }, []);
 
@@ -69,7 +65,7 @@ function Chessboard(props) {
         setInitResult(res);
         subscription = chessSubject.subscribe(g => {
           if (!g) {
-            alert('No game object returned by the chessSubject observable.');
+            alert('There is no game configured for you!');
             return;
           }
           setBoard(g.board);
@@ -95,13 +91,13 @@ function Chessboard(props) {
       <Result isGameOver={isGameOver} result={result}></Result>
       <div className="chessboard">
         <div className="board-container">
-          {gameObject.oponent && gameObject.oponent.name && (
-            <span className="tag is-link">{gameObject.oponent.name}</span>
+          {gameObject.opponent && gameObject.opponent.name && (
+            <span className="tag is-link">{gameObject.opponent.name}</span>
           )}
 
           <Board board={board} turnBoard={position} />
-          {gameObject.member && gameObject.member.name && (
-            <span className="tag is-link">{gameObject.member.name}</span>
+          {gameObject.player && gameObject.player.name && (
+            <span className="tag is-link">{gameObject.player.name}</span>
           )}
         </div>
       </div>

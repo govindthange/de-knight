@@ -38,23 +38,23 @@ export async function start(gameId, currentUser, multiplayerGameObject, saveGame
     }
 
     // If this game is in waiting and currentUser is not the creator (player #1)
-    // i.e. you, the currentUser, are the other player #2.
-    const player1 = initialGame.members.find(m => m.creator === true);
-    if (initialGame.status === 'waiting' && player1.uid !== currentUser.uid) {
-      const player2 = {
+    // then you, the currentUser, are the opponent to the creator.
+    const player = initialGame.players.find(m => m.creator === true);
+    if (initialGame.status === 'waiting' && player.uid !== currentUser.uid) {
+      const opponent = {
         uid: currentUser.uid,
         name: currentUser.name,
-        piece: player1.piece === 'w' ? 'b' : 'w'
+        piece: player.piece === 'w' ? 'b' : 'w'
       };
 
-      let players = [...initialGame.members, player2];
+      let players = [...initialGame.players, opponent];
 
-      multiplayerGame = Object.assign(initialGame, {id: gameId, members: players, status: 'ready'});
+      multiplayerGame = Object.assign(initialGame, {id: gameId, players: players, status: 'ready'});
       sendGameToRemotePlayer(multiplayerGame);
     }
-    // If the current game is not in waiting and you are not in the members list
-    else if (!initialGame.members.map(m => m.uid).includes(currentUser.uid)) {
-      alert('The game is not in waiting state and you are not in the members list');
+    // If the current game is not in waiting and you are not part of the players list
+    else if (!initialGame.players.map(m => m.uid).includes(currentUser.uid)) {
+      alert('You are not part of the players list for this game!');
       return 'intruder';
     } else if (initialGame.status === 'waiting') {
       multiplayerGame = Object.assign(initialGame, {id: gameId});
@@ -125,25 +125,25 @@ function updateSubject(pendingPromotion, reset) {
 
 export function applyRemotePlayerGame(currentUser, game) {
   !game && alert('No game object received from the remote player!');
-  !game.members && alert('Game object received from remote is problematic.');
+  !game.players && alert('Game object received from remote is problematic.');
 
-  // Check newly added members in the received game object's members list
-  let newMembers = game.members.filter(
-    incomingMember =>
-      !multiplayerGame.members.some(existingMember => existingMember.uid === incomingMember.uid)
+  // Check newly added players in the received game object's players list.
+  let newPlayers = game.players.filter(
+    newPlayer =>
+      !multiplayerGame.players.some(existingPlayer => existingPlayer.uid === newPlayer.uid)
   );
 
-  // Add the newly found members to our global multiplayerGame object's members list.
-  if (newMembers.length > 0) {
-    for (let newMember of newMembers) {
-      alert(`A new member joined! ${JSON.stringify(newMember)}`);
-      multiplayerGame.members.push(newMember);
+  // Add the newly found players to our global multiplayerGame object's players list.
+  if (newPlayers.length > 0) {
+    for (let newPlayer of newPlayers) {
+      alert(`The opponent has joined! ${JSON.stringify(newPlayer)}`);
+      multiplayerGame.players.push(newPlayer);
     }
   }
 
   const {pendingPromotion, gameData, ...restOfGame} = game;
-  const member = game.members.find(m => m.uid === currentUser.uid);
-  const oponent = game.members.find(m => m.uid !== currentUser.uid);
+  const player = game.players.find(m => m.uid === currentUser.uid);
+  const opponent = game.players.find(m => m.uid !== currentUser.uid);
 
   if (gameData) {
     chess.load(gameData);
@@ -155,14 +155,14 @@ export function applyRemotePlayerGame(currentUser, game) {
     board: chess.board(),
     pendingPromotion,
     isGameOver,
-    position: member.piece,
-    member,
-    oponent,
+    position: player.piece,
+    player,
+    opponent,
     result: isGameOver ? getResult() : null,
     ...restOfGame
   });
 
-  currentPlayer = member;
+  currentPlayer = player;
 }
 
 export function getResult() {
@@ -228,7 +228,7 @@ export function move(from, to, promotion) {
       }
     }
   } else {
-    // .move() won't work for a pawns on verge of being promoted.
+    // .move() won't work for a pawn who is on the verge of being promoted.
     const isMoveAllowed = chess.move(theMove);
     if (isMoveAllowed) {
       updateSubject();
