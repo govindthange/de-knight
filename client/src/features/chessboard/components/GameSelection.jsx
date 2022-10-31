@@ -1,14 +1,14 @@
-import './index.css';
+import '../index.css';
 import React from 'react';
 import {useState} from 'react';
 import * as uuid from 'uuid';
 import {useSelector} from 'react-redux';
 import {useDispatch} from 'react-redux';
-import {setGame} from '../../features/chessboard/chessboardSlice';
-import {getAuthenticatedUser} from '../../features/authentication/authenticationSlice';
+import {setGame} from '../chessboardSlice';
+import {getAuthenticatedUser} from '../../authentication/authenticationSlice';
 import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
 
-function Home() {
+function GameSelection() {
   const authenticatedUser = useSelector(getAuthenticatedUser);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
@@ -55,13 +55,13 @@ function Home() {
 
   return (
     <>
-      <div className="columns home">
-        <div className="column has-background-primary home-columns">
+      <div className="columns game-selection">
+        <div className="column has-background-primary game-selection-columns">
           <button className="button is-link" onClick={onPlayLocally}>
             Play Locally
           </button>
         </div>
-        <div className="column has-background-link home-columns">
+        <div className="column has-background-link game-selection-columns">
           <button className="button is-primary" onClick={onPlayOnline}>
             Play Online
           </button>
@@ -92,4 +92,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default GameSelection;

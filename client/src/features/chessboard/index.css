@@ -3,6 +3,20 @@
   margin: 0;
 }
 
+.game-selection {
+  min-height: 100vh;
+}
+
+.game-selection-columns {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 .chessboard {
   /* min-height: 100vh; */
   display: flex;
