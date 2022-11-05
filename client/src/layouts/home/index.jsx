@@ -1,20 +1,28 @@
 import './index.css';
-import React from 'react';
+import React, {useState} from 'react';
 import Banner from '../../features/marketplace/components/Banner';
 import Footer from './components/Footer';
 import NftListing from '../../features/marketplace/components/NftListing';
 import Tournaments from '../../features/tournament/components/Tournaments';
-import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
+import PieceColorPicker from '../../features/chessboard/components/PieceColorPicker';
 
 function Home() {
-  const history = useHistory();
+  const [isChessPieceColorPickerVisible, setChessPieceColorPicker] = useState(false);
 
-  const onPlay = startingPiece => {
-    history.push('/game-selection');
+  const onTournamentClick = () => {
+    setChessPieceColorPicker(true);
+  };
+
+  const onClosePieceColorPicker = () => {
+    setChessPieceColorPicker(false);
   };
 
   return (
     <>
+      <PieceColorPicker
+        shouldShow={isChessPieceColorPickerVisible}
+        onClose={onClosePieceColorPicker}
+      />
       <div id="app">
         <section className="hero is-fullheight is-light">
           <div className="hero-head">
@@ -49,7 +57,12 @@ function Home() {
                       <span>NFTs</span>
                       <span className="tag is-primary m-l-5">Mint</span>
                     </a>
-                    <a href="./game-selection" className="navbar-item has-text-weight-semibold">
+                    <a href="./play/standalone" className="navbar-item has-text-weight-semibold">
+                      Play Solo
+                    </a>
+                    <a
+                      className="navbar-item has-text-weight-semibold"
+                      onClick={() => onTournamentClick()}>
                       Tournament
                     </a>
                     <a href="#" className="navbar-item has-text-weight-semibold">
@@ -111,10 +124,7 @@ function Home() {
                           </span>
                         </div>
                         <div className="control">
-                          <button
-                            type="button"
-                            className="button is-large is-primary"
-                            onClick={() => onPlay()}>
+                          <button type="button" className="button is-large is-primary">
                             <span className="has-text-weight-semibold">Go!</span>
                           </button>
                         </div>
