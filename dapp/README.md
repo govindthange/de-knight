@@ -61,16 +61,25 @@ Compiling your contracts...
 > Everything is up to date, there is nothing to compile.
 
 
+  Contract: EthSwap
+    EthSwap deployment w/ transfer
+      ✔ should have a name "ETH/CHESS Swap"
+      ✔ should show balance 1000000 after transfer (85ms)
+    Purchase tokens
+      ✔ Should allow player to instantly purchase tokens from EthSwap at a fixed rate.
+    Sell tokens
+      ✔ Should allow player to instantly sell tokens to EthSwap at a fixed rate.
+
   Contract: Greeter
     ✔ should return 'Hello World!'
-    ✔ should change the greeting message (98ms)
+    ✔ should change the greeting message (87ms)
 
   Contract: Token
     Token deployment
       ✔ Should have a name
 
 
-  3 passing (346ms)
+  7 passing (999ms)
 ```
 
 > When you run the test for the first time it will may fail like so:

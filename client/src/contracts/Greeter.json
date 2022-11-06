@@ -8381,12 +8381,12 @@
     "1667709900741": {
       "events": {},
       "links": {},
-      "address": "0x4a0DC44e47E734F7ce32fCBc7796A2064bb8e8b2",
-      "transactionHash": "0x5065b59beb6e3249051badad5752a2d1af23f4c6ad735def1050a64a21e0db9a"
+      "address": "0x69Cd8BB1E15583dEd8bdAb7EF732764333E4C804",
+      "transactionHash": "0xc5cdafecddcb02785653374014d2083ab65b99724f5e78072d9429997b38b356"
     }
   },
   "schemaVersion": "3.4.10",
-  "updatedAt": "2022-11-06T06:29:15.528Z",
+  "updatedAt": "2022-11-06T07:39:32.429Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Govind Thange",
