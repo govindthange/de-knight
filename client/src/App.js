@@ -6,6 +6,7 @@ import UserForm from './features/authentication/components/UserForm';
 import Chessboard from './features/chessboard';
 import {useSelector} from 'react-redux';
 import {hasLoggedIn} from './features/authentication/authenticationSlice';
+import Swap from './features/swap';
 
 function App() {
   const isLoggedIn = useSelector(hasLoggedIn);
@@ -22,6 +23,9 @@ function App() {
         </Route>
         <Route path="/play/:id">
           <Chessboard></Chessboard>
+        </Route>
+        <Route path="/swap">
+          <Swap />
         </Route>
       </Switch>
     </Router>
