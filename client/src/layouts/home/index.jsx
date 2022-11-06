@@ -4,8 +4,15 @@ import Banner from '../../features/marketplace/components/Banner';
 import Footer from './components/Footer';
 import NftListing from '../../features/marketplace/components/NftListing';
 import Tournaments from '../../features/tournament/components/Tournaments';
+import {useHistory} from 'react-router-dom/cjs/react-router-dom.min';
 
 function Home() {
+  const history = useHistory();
+
+  const onPlay = startingPiece => {
+    history.push('/game-selection');
+  };
+
   return (
     <>
       <div id="app">
@@ -104,7 +111,10 @@ function Home() {
                           </span>
                         </div>
                         <div className="control">
-                          <button type="button" className="button is-large is-primary">
+                          <button
+                            type="button"
+                            className="button is-large is-primary"
+                            onClick={() => onPlay()}>
                             <span className="has-text-weight-semibold">Go!</span>
                           </button>
                         </div>

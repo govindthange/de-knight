@@ -42,7 +42,7 @@ function Chessboard(props) {
   const {isConnected, emit} = useSocketIo(listenerMap);
 
   const fetchGameById = useCallback(gameId => {
-    return fetch(`http://localhost:3000/game/${gameId}`).then(response => response.json());
+    return fetch(`http://localhost:5000/game/${gameId}`).then(response => response.json());
   }, []);
 
   const sendGameToRemotePlayer = new useCallback(g => {

@@ -4,12 +4,24 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 
+const ALLOWED_DEFAULT_ORIGIN = process.env.CORS_ALLOWED_DOMAIN;
+const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3001",
+  "http://localhost:3456",
+  "http://127.0.0.1:3456",
+];
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: process.env.CORS_ALLOWED_DOMAIN,
+    origin: ALLOWED_ORIGINS,
+    default: ALLOWED_DEFAULT_ORIGIN,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 
