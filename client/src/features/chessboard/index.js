@@ -1,3 +1,4 @@
+import React from 'react';
 import './index.css';
 import Board from './components/Board';
 import {useCallback, useEffect, useState} from 'react';
