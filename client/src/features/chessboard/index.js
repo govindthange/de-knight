@@ -1,4 +1,6 @@
 import './index.css';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+// import {solid, regular, brands, icon} from '@fortawesome/fontawesome-svg-core/import.macro'; // <-- import styles to be used
 import Board from './components/Board';
 import {useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
@@ -119,11 +121,11 @@ function Chessboard(props) {
         <div id="navbar-chessboard-menu" className="navbar-menu">
           <div className="navbar-start">
             <a className="navbar-item" href="../">
-              Home
+              <i className="fas fa-home">{' Home'}</i>
             </a>
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link" href="#">
-                Game
+                <i className="fas fa-chess">{' Game'}</i>
               </a>
               <div className="navbar-dropdown is-boxed">
                 <a className="navbar-item" href="../game-selection">
@@ -175,10 +177,22 @@ function Chessboard(props) {
                       {gameObject.opponent && gameObject.opponent.name && (
                         <span className="tag is-warning">{gameObject.opponent.name}</span>
                       )}
+                      <span class="socket-connection-status">
+                        {isConnected ? (
+                          <i className="online fa fa-network-wired fa-lg" />
+                        ) : (
+                          <i className="offline fa fa-plug fa-lg" />
+                        )}
+                      </span>
+                      <span class="loading-status">
+                        {loading && <i className="fas fa-spinner fa-pulse fa-lg" />}
+                      </span>
                       <Board board={board} turnBoard={position} />
                       {gameObject.player && gameObject.player.name && (
                         <span className="tag is-warning">{gameObject.player.name}</span>
                       )}
+                      <span class="game-status">{status && '(' + status + ')'}</span>
+                      <span class="game-status">{initResult && initResult}</span>
                     </div>
                   </div>
                 </div>
@@ -189,21 +203,14 @@ function Chessboard(props) {
                 )}
               </div>
             </div>
-            <div class="column is-4">
-              <div class="rows">
+            <div class="column is-4 chessboard-right-column is-flex-align-items-flex-end mt-auto">
+              <div class="chatbox-container rows">
                 {isGameOver && (
                   <div className="row">
                     <Result isGameOver={isGameOver} result={result}></Result>
                   </div>
                 )}
-                <div className="row is-full chessboard-right-column">
-                  <Status
-                    initResult={initResult}
-                    loading={loading}
-                    status={status}
-                    isConnected={isConnected}></Status>
-                </div>
-                <div class="row">
+                <div className="row">
                   <SocketIoDemo />
                 </div>
               </div>

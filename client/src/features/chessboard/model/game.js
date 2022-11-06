@@ -63,7 +63,7 @@ export async function start(gameId, currentUser, fetchGameById, saveGame) {
 
     applyRemotePlayerGame(currentUser, initialGame);
 
-    return 'multiplayer-game-object-ready';
+    return 'Multiplayer Game';
   } else {
     multiplayerGame = null;
     currentPlayer = null;
@@ -75,7 +75,7 @@ export async function start(gameId, currentUser, fetchGameById, saveGame) {
     }
 
     updateSubject();
-    return 'standalone-game-object-ready';
+    return 'Standalone Game';
   }
 }
 
