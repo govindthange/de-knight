@@ -47,9 +47,9 @@ function Home() {
                   <div className="navbar-end">
                     <a href="#" className="navbar-item has-text-weight-semibold">
                       <span>NFTs</span>
-                      <span className="tag is-success m-l-5">Mint</span>
+                      <span className="tag is-primary m-l-5">Mint</span>
                     </a>
-                    <a href="#" className="navbar-item has-text-weight-semibold">
+                    <a href="./game-selection" className="navbar-item has-text-weight-semibold">
                       Tournament
                     </a>
                     <a href="#" className="navbar-item has-text-weight-semibold">
@@ -91,7 +91,7 @@ function Home() {
                             type="text"
                             id="mainSearch"
                             defaultValue=""
-                            placeholder="Enter your name and start playing..."
+                            placeholder="Find NFTs you'll love..."
                             className="input is-large"
                           />
                           <span className="icon is-small is-left">

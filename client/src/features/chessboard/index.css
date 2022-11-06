@@ -1,3 +1,13 @@
+/*! debug.css | MIT License | zaydek.github.com/debug.css */
+/*
+*:not(path):not(g) {
+  color: hsla(210, 100%, 100%, 0.9) !important;
+  background: hsla(210, 100%, 50%, 0.5) !important;
+  outline: solid 0.25rem hsla(210, 100%, 100%, 0.5) !important;
+
+  box-shadow: none !important;
+}
+*/
 * {
   margin: 0;
   margin: 0;
@@ -19,14 +29,24 @@
 
 .chessboard {
   /* min-height: 100vh; */
+  padding-top: 30px;
+  padding-bottom: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.chessboard-navbar {
+  max-height: 50px;
+}
+
+.chessboard-right-column {
+  padding-top: 28px;
+}
+
 .board-container {
-  width: 600px;
-  height: 600px;
+  width: 700px;
+  height: 700px;
 }
 
 .board {
@@ -112,8 +132,19 @@
 }
 
 .share-game {
+  /*
   position: absolute;
   width: 500px;
   bottom: 0;
   left: 0;
+  */
+  margin-left: 15px;
+  margin-right: 15px;
 }
+
+/*
+.rows{
+  display: flex;
+  flex-direction: column;
+}
+*/

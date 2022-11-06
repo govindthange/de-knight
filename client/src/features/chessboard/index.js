@@ -7,6 +7,7 @@ import {setGame} from './chessboardSlice';
 import {
   subjectObservable as chessSubject,
   start as startChess,
+  reset as resetChess,
   applyRemotePlayerGame,
   getResult
 } from './model/game';
@@ -15,6 +16,7 @@ import {getAuthenticatedUser} from '../authentication/authenticationSlice';
 import {SharableLink} from './components/SharableLink';
 import {Status} from './components/Status';
 import {Result} from './components/Result';
+import SocketIoDemo from '../chat/components/SocketIoDemo';
 
 function Chessboard(props) {
   const currentUser = useSelector(getAuthenticatedUser);
@@ -87,26 +89,128 @@ function Chessboard(props) {
 
   return (
     <>
-      <a href="../">Go to root page....</a>
-      <Result isGameOver={isGameOver} result={result}></Result>
-      <div className="chessboard">
-        <div className="board-container">
-          {gameObject.opponent && gameObject.opponent.name && (
-            <span className="tag is-link">{gameObject.opponent.name}</span>
-          )}
-
-          <Board board={board} turnBoard={position} />
-          {gameObject.player && gameObject.player.name && (
-            <span className="tag is-link">{gameObject.player.name}</span>
-          )}
+      <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
+        <div className="navbar-brand">
+          {/*
+          <a className="navbar-item has-background-success" href="#">
+            <h1 class="has-text-white">De-Chess</h1>
+          </a>
+          */}
+          <a className="navbar-item" href="../">
+            <img
+              src={require('../../assets/images/dechess-logo.png')}
+              alt="De-CHESS, a decentralized play-to-earn game"
+              width="112"
+              height="28"
+            />
+          </a>
+          <a
+            role="button"
+            class="navbar-burger"
+            aria-label="menu"
+            aria-expanded="false"
+            data-target="navbar-chessboard-menu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
         </div>
-      </div>
-      {status === 'waiting' && <SharableLink />}
-      <Status
-        initResult={initResult}
-        loading={loading}
-        status={status}
-        isConnected={isConnected}></Status>
+
+        <div id="navbar-chessboard-menu" className="navbar-menu">
+          <div className="navbar-start">
+            <a className="navbar-item" href="../">
+              Home
+            </a>
+            <div className="navbar-item has-dropdown is-hoverable">
+              <a className="navbar-link" href="#">
+                Game
+              </a>
+              <div className="navbar-dropdown is-boxed">
+                <a className="navbar-item" href="../game-selection">
+                  New Game
+                </a>
+                <a className="navbar-item" onClick={() => resetChess()}>
+                  Restart
+                </a>
+                <a className="navbar-item" href="#">
+                  Share Link
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="navbar-end chessboard-navbar">
+            <div className="navbar-item">
+              <div className="buttons">
+                <a className="button is-light">
+                  <span className="icon">
+                    <i className="fa fa-phone"></i>
+                  </span>
+                  <span>Call Opponent</span>
+                </a>
+              </div>
+            </div>
+            <div className="navbar-item">
+              <div className="field is-grouped">
+                <p className="control">
+                  <a className="button is-primary" href="#">
+                    <span className="icon">
+                      <i className="fa fa-share"></i>
+                    </span>
+                    <span>Share Link</span>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <section class="hero is-primary is-fullheight-with-navbar">
+        <div class="container">
+          <div class="columns">
+            <div class="column is-8">
+              <div class="rows">
+                <div class="row">
+                  <div className="chessboard">
+                    <div className="board-container">
+                      {gameObject.opponent && gameObject.opponent.name && (
+                        <span className="tag is-warning">{gameObject.opponent.name}</span>
+                      )}
+                      <Board board={board} turnBoard={position} />
+                      {gameObject.player && gameObject.player.name && (
+                        <span className="tag is-warning">{gameObject.player.name}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {status === 'waiting' && (
+                  <div className="row">
+                    <SharableLink />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div class="column is-4">
+              <div class="rows">
+                {isGameOver && (
+                  <div className="row">
+                    <Result isGameOver={isGameOver} result={result}></Result>
+                  </div>
+                )}
+                <div className="row is-full chessboard-right-column">
+                  <Status
+                    initResult={initResult}
+                    loading={loading}
+                    status={status}
+                    isConnected={isConnected}></Status>
+                </div>
+                <div class="row">
+                  <SocketIoDemo />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

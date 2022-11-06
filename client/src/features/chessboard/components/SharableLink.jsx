@@ -9,7 +9,7 @@ export function SharableLink() {
 
   return (
     <div className="notification is-link share-game">
-      <strong>Share this game to continue</strong>
+      <strong>Share link with your opponent...</strong>
       <br />
       <br />
       <div className="field has-addons">

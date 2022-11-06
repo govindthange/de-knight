@@ -1,10 +1,9 @@
 import './App.css';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import GameSelection from './features/chessboard/components/GameSelection';
-import Home from './layouts/home'
+import Home from './layouts/home';
 import UserForm from './features/authentication/components/UserForm';
 import Chessboard from './features/chessboard';
-import SocketIoDemo from './features/chat/components/SocketIoDemo';
 import {useSelector} from 'react-redux';
 import {hasLoggedIn} from './features/authentication/authenticationSlice';
 
@@ -26,7 +25,6 @@ function App() {
         </Route>
         <Route path="/play/:id">
           <Chessboard></Chessboard>
-          <SocketIoDemo />
         </Route>
       </Switch>
     </Router>
