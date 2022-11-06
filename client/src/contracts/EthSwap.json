@@ -10452,10 +10452,16 @@
       "links": {},
       "address": "0x5559B9a3D1a96fd7fE7E53649c5f324EcE2eE691",
       "transactionHash": "0x38781bf53c3c5ac66543e1145a1d314dda6db448d4647a57933b6e12bdf71081"
+    },
+    "1667732087956": {
+      "events": {},
+      "links": {},
+      "address": "0xfe48fcA10663f14D1b23146A9030030F591Bdb06",
+      "transactionHash": "0xb19e3180ca6190b29f55265b50cf2e330f48addb27e1e7c3c0062639145a8239"
     }
   },
   "schemaVersion": "3.4.10",
-  "updatedAt": "2022-11-06T07:39:33.254Z",
+  "updatedAt": "2022-11-06T13:31:06.891Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Govind Thange",
