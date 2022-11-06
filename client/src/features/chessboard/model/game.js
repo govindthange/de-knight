@@ -16,6 +16,9 @@ const TEST_CHECK_MATE_SCENARIO = 'rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBN
 // Scenario 4. There are insufficient pieces.
 const TEST_INSUCCICIENT__PIECES_SCENARIO = `k7/8/n7/8/8/8/8/7K b - - 0 1`;
 
+// Scenario 5. Checkmake winner (white)
+const TEST_CHECKMATE_WINNER_STATE = '1R1Q1bB1/4k3/3p4/3Pp3/1Pp1Pp2/2P2K2/3Q2p1/1q6 b - - 0 25';
+
 const chess = new Chess();
 
 export let subjectObservable = new BehaviorSubject();
@@ -167,8 +170,8 @@ export function applyRemotePlayerGame(currentUser, game) {
 
 export function getResult() {
   if (chess.in_checkmate()) {
-    const winner = chess.turn() === 'w' ? 'Dark' : 'Light';
-    return `Checkmate - Winner - ${winner}`;
+    const winner = chess.turn() === 'w' ? 'Black/Dark Color' : 'White/Light Color';
+    return `Checkmate  |  Winner 🏆 ${winner}`;
   } else if (chess.in_draw()) {
     let reason = '50 Moves Rule';
     if (chess.in_stalemate()) {

@@ -179,6 +179,14 @@
   color: #e5f8f8;
 }
 
-.game-result p {
-  color: lightcyan;
+.game-result {
+  margin-left: 5px;
+  font-weight: bolder;
+  color: #f8f8a3;
+  content: 'Winner';
+}
+
+.game-result > p::before {
+  content: '✨ ';
+  font-size: 1.5em;
 }

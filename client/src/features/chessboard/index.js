@@ -14,7 +14,6 @@ import {
 import useSocketIo from '../../hooks/useSocketIo';
 import {getAuthenticatedUser} from '../authentication/authenticationSlice';
 import {SharableLink} from './components/SharableLink';
-import {Result} from './components/Result';
 import SocketIoDemo from '../chat/components/SocketIoDemo';
 
 function Chessboard(props) {
@@ -184,6 +183,7 @@ function Chessboard(props) {
                       <span className="loading-status">
                         {loading && <i className="fas fa-spinner fa-pulse fa-lg" />}
                       </span>
+                      <span className="game-result">{isGameOver && <p>result</p>}</span>
                       <Board board={board} turnBoard={position} />
                       {gameObject.player && gameObject.player.name && (
                         <span className="tag is-warning">{gameObject.player.name}</span>
@@ -202,11 +202,6 @@ function Chessboard(props) {
             </div>
             <div className="column is-4 chessboard-right-column is-flex-align-items-flex-end mt-auto">
               <div className="chatbox-container rows">
-                {isGameOver && (
-                  <div className="row">
-                    <Result isGameOver={isGameOver} result={result}></Result>
-                  </div>
-                )}
                 <div className="row">
                   <SocketIoDemo />
                 </div>
