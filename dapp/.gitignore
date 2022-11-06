@@ -3,3 +3,6 @@ abis/*
 
 # exception all ABI artifacts but the folder
 !abis/.gitkeep
+
+node_modules
+package-lock.json
