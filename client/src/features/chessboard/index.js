@@ -14,9 +14,9 @@ import {
 } from './model/game';
 import useSocketIo from '../../hooks/useSocketIo';
 import {getAuthenticatedUser} from '../authentication/authenticationSlice';
-import {SharableLink} from './components/SharableLink';
 import SocketIoDemo from '../chat/components/SocketIoDemo';
 import PieceColorPicker from './components/PieceColorPicker';
+import ShareLinkDialog from './components/ShareLinkDialog';
 
 function Chessboard(props) {
   const currentUser = useSelector(getAuthenticatedUser);
@@ -32,6 +32,7 @@ function Chessboard(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   const [isChessPieceColorPickerVisible, setChessPieceColorPicker] = useState(false);
+  const [isShareLinkDialogVisible, setShareLinkDialogVisibility] = useState(false);
 
   const onNewGame = useCallback(() => {
     resetChess();
@@ -44,6 +45,19 @@ function Chessboard(props) {
 
   const onClosePieceColorPicker = useCallback(() => {
     setChessPieceColorPicker(false);
+  }, []);
+
+  const onCopyLinkToShare = useCallback(async () => {
+    const sharableLink = window.location.href;
+    await navigator.clipboard.writeText(sharableLink);
+  }, []);
+
+  const onShareLink = useCallback(() => {
+    setShareLinkDialogVisibility(true);
+  }, []);
+
+  const onCloseShareLinkDialog = useCallback(() => {
+    setShareLinkDialogVisibility(false);
   }, []);
 
   // Get memoized callbacks.
@@ -69,7 +83,6 @@ function Chessboard(props) {
   }, []);
 
   const isMultiplayerGame = id.trim() !== 'standalone';
-  const isAwaitingOpponent = isMultiplayerGame && gameObject.players?.length < 2;
 
   useEffect(() => {
     let subscription;
@@ -111,6 +124,7 @@ function Chessboard(props) {
         shouldShow={isChessPieceColorPickerVisible}
         onClose={onClosePieceColorPicker}
       />
+      <ShareLinkDialog shouldShow={isShareLinkDialogVisible} onClose={onCloseShareLinkDialog} />
       <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           {/*
@@ -154,8 +168,8 @@ function Chessboard(props) {
                 <a className="navbar-item" onClick={() => onNewTournament()}>
                   New Tournament
                 </a>
-                <a className="navbar-item" href="#">
-                  Share Link
+                <a className="navbar-item" href="#" onClick={() => onCopyLinkToShare()}>
+                  Copy link to share
                 </a>
               </div>
             </div>
@@ -175,7 +189,7 @@ function Chessboard(props) {
               <div className="navbar-item">
                 <div className="field is-grouped">
                   <p className="control">
-                    <a className="button is-primary" href="#">
+                    <a className="button is-primary" href="#" onClick={() => onShareLink()}>
                       <span className="icon">
                         <i className="fa fa-share"></i>
                       </span>
@@ -219,11 +233,6 @@ function Chessboard(props) {
                     </div>
                   </div>
                 </div>
-                {isAwaitingOpponent && (
-                  <div className="row">
-                    <SharableLink />
-                  </div>
-                )}
               </div>
             </div>
             {isMultiplayerGame && (
