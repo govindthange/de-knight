@@ -4,6 +4,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {setGame} from './chessboardSlice';
+import {useHistory} from 'react-router-dom';
 import {
   subjectObservable as chessSubject,
   start as startChess,
@@ -15,6 +16,7 @@ import useSocketIo from '../../hooks/useSocketIo';
 import {getAuthenticatedUser} from '../authentication/authenticationSlice';
 import {SharableLink} from './components/SharableLink';
 import SocketIoDemo from '../chat/components/SocketIoDemo';
+import PieceColorPicker from './components/PieceColorPicker';
 
 function Chessboard(props) {
   const currentUser = useSelector(getAuthenticatedUser);
@@ -28,6 +30,21 @@ function Chessboard(props) {
   const [gameObject, setGameObject] = useState({});
   const {id} = useParams();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const [isChessPieceColorPickerVisible, setChessPieceColorPicker] = useState(false);
+
+  const onNewGame = useCallback(() => {
+    resetChess();
+    history.push(`/play/standalone`);
+  }, []);
+
+  const onNewTournament = useCallback(() => {
+    setChessPieceColorPicker(true);
+  }, []);
+
+  const onClosePieceColorPicker = useCallback(() => {
+    setChessPieceColorPicker(false);
+  }, []);
 
   // Get memoized callbacks.
   const listenerMap = {
@@ -50,6 +67,9 @@ function Chessboard(props) {
     !g.players && alert('There are no players in the list to send!');
     emit('play', {room: id, move: JSON.stringify(g)});
   }, []);
+
+  const isMultiplayerGame = id.trim() !== 'standalone';
+  const isAwaitingOpponent = isMultiplayerGame && gameObject.players?.length < 2;
 
   useEffect(() => {
     let subscription;
@@ -87,6 +107,10 @@ function Chessboard(props) {
 
   return (
     <>
+      <PieceColorPicker
+        shouldShow={isChessPieceColorPickerVisible}
+        onClose={onClosePieceColorPicker}
+      />
       <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           {/*
@@ -124,11 +148,11 @@ function Chessboard(props) {
                 <i className="fas fa-chess">{' Game'}</i>
               </a>
               <div className="navbar-dropdown is-boxed">
-                <a className="navbar-item" href="../game-selection">
+                <a className="navbar-item" onClick={() => onNewGame()}>
                   New Game
                 </a>
-                <a className="navbar-item" onClick={() => resetChess()}>
-                  Restart
+                <a className="navbar-item" onClick={() => onNewTournament()}>
+                  New Tournament
                 </a>
                 <a className="navbar-item" href="#">
                   Share Link
@@ -136,36 +160,38 @@ function Chessboard(props) {
               </div>
             </div>
           </div>
-          <div className="navbar-end chessboard-navbar">
-            <div className="navbar-item">
-              <div className="buttons">
-                <a className="button is-light">
-                  <span className="icon">
-                    <i className="fa fa-phone"></i>
-                  </span>
-                  <span>Call Opponent</span>
-                </a>
-              </div>
-            </div>
-            <div className="navbar-item">
-              <div className="field is-grouped">
-                <p className="control">
-                  <a className="button is-primary" href="#">
+          {isMultiplayerGame && (
+            <div className="navbar-end chessboard-navbar">
+              <div className="navbar-item">
+                <div className="buttons">
+                  <a className="button is-light">
                     <span className="icon">
-                      <i className="fa fa-share"></i>
+                      <i className="fa fa-phone"></i>
                     </span>
-                    <span>Share Link</span>
+                    <span>Call Opponent</span>
                   </a>
-                </p>
+                </div>
+              </div>
+              <div className="navbar-item">
+                <div className="field is-grouped">
+                  <p className="control">
+                    <a className="button is-primary" href="#">
+                      <span className="icon">
+                        <i className="fa fa-share"></i>
+                      </span>
+                      <span>Share Link</span>
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </nav>
       <section className="hero is-primary is-fullheight-with-navbar">
         <div className="container">
           <div className="columns">
-            <div className="column is-8">
+            <div className={`column is-${isMultiplayerGame ? 8 : 12}`}>
               <div className="rows">
                 <div className="row">
                   <div className="chessboard">
@@ -193,20 +219,22 @@ function Chessboard(props) {
                     </div>
                   </div>
                 </div>
-                {status === 'waiting' && (
+                {isAwaitingOpponent && (
                   <div className="row">
                     <SharableLink />
                   </div>
                 )}
               </div>
             </div>
-            <div className="column is-4 chessboard-right-column is-flex-align-items-flex-end mt-auto">
-              <div className="chatbox-container rows">
-                <div className="row">
-                  <SocketIoDemo />
+            {isMultiplayerGame && (
+              <div className="column is-4 chessboard-right-column is-flex-align-items-flex-end mt-auto">
+                <div className="chatbox-container rows">
+                  <div className="row">
+                    <SocketIoDemo />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
