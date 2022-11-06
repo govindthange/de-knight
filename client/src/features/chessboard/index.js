@@ -1,6 +1,4 @@
 import './index.css';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-// import {solid, regular, brands, icon} from '@fortawesome/fontawesome-svg-core/import.macro'; // <-- import styles to be used
 import Board from './components/Board';
 import {useCallback, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
@@ -16,7 +14,6 @@ import {
 import useSocketIo from '../../hooks/useSocketIo';
 import {getAuthenticatedUser} from '../authentication/authenticationSlice';
 import {SharableLink} from './components/SharableLink';
-import {Status} from './components/Status';
 import {Result} from './components/Result';
 import SocketIoDemo from '../chat/components/SocketIoDemo';
 
@@ -95,7 +92,7 @@ function Chessboard(props) {
         <div className="navbar-brand">
           {/*
           <a className="navbar-item has-background-success" href="#">
-            <h1 class="has-text-white">De-Chess</h1>
+            <h1 className="has-text-white">De-Chess</h1>
           </a>
           */}
           <a className="navbar-item" href="../">
@@ -108,7 +105,7 @@ function Chessboard(props) {
           </a>
           <a
             role="button"
-            class="navbar-burger"
+            className="navbar-burger"
             aria-label="menu"
             aria-expanded="false"
             data-target="navbar-chessboard-menu">
@@ -166,33 +163,33 @@ function Chessboard(props) {
           </div>
         </div>
       </nav>
-      <section class="hero is-primary is-fullheight-with-navbar">
-        <div class="container">
-          <div class="columns">
-            <div class="column is-8">
-              <div class="rows">
-                <div class="row">
+      <section className="hero is-primary is-fullheight-with-navbar">
+        <div className="container">
+          <div className="columns">
+            <div className="column is-8">
+              <div className="rows">
+                <div className="row">
                   <div className="chessboard">
                     <div className="board-container">
                       {gameObject.opponent && gameObject.opponent.name && (
                         <span className="tag is-warning">{gameObject.opponent.name}</span>
                       )}
-                      <span class="socket-connection-status">
+                      <span className="socket-connection-status">
                         {isConnected ? (
                           <i className="online fa fa-network-wired fa-lg" />
                         ) : (
                           <i className="offline fa fa-plug fa-lg" />
                         )}
                       </span>
-                      <span class="loading-status">
+                      <span className="loading-status">
                         {loading && <i className="fas fa-spinner fa-pulse fa-lg" />}
                       </span>
                       <Board board={board} turnBoard={position} />
                       {gameObject.player && gameObject.player.name && (
                         <span className="tag is-warning">{gameObject.player.name}</span>
                       )}
-                      <span class="game-status">{status && '(' + status + ')'}</span>
-                      <span class="game-status">{initResult && initResult}</span>
+                      <span className="game-status">{status && '(' + status + ')'}</span>
+                      <span className="game-status">{initResult && initResult}</span>
                     </div>
                   </div>
                 </div>
@@ -203,8 +200,8 @@ function Chessboard(props) {
                 )}
               </div>
             </div>
-            <div class="column is-4 chessboard-right-column is-flex-align-items-flex-end mt-auto">
-              <div class="chatbox-container rows">
+            <div className="column is-4 chessboard-right-column is-flex-align-items-flex-end mt-auto">
+              <div className="chatbox-container rows">
                 {isGameOver && (
                   <div className="row">
                     <Result isGameOver={isGameOver} result={result}></Result>
