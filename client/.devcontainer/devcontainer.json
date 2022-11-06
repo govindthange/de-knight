@@ -52,7 +52,8 @@
 		"formulahendry.auto-rename-tag",
 		"coenraads.bracket-pair-colorizer-2",
 		"naumovs.color-highlight",
-		"wayou.vscode-todo-highlight"
+		"wayou.vscode-todo-highlight",
+		"janne252.fontawesome-autocomplete"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
