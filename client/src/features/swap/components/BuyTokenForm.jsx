@@ -39,7 +39,7 @@ function BuyTokenForm(props) {
       </div>
       <div>
         <span>Exchange Rate</span>
-        <span>1 ETH = 100 DApp</span>
+        <span>1 ETH = 100 CHESS</span>
       </div>
       <button type="submit">Swap</button>
     </form>
