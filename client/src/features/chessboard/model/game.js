@@ -5,18 +5,23 @@ import {BehaviorSubject} from 'rxjs';
 // FEN position to test various scenarios
 //
 // Scenario 1. Promotion of pawns
+// eslint-disable-next-line
 const TEST_PROMOTION_SCENARIO = 'rnb2bnr/pppPkppp/8/4p3/7q/8/PPPP1PPP/RNBQKBNR w KQ - 1 5';
 
 // Scenario 2. There is a draw and the other user can't make any moves.
+// eslint-disable-next-line
 const TEST_STALE_MATE_SCENARIO = '4k3/4P3/4K3/8/8/8/8/8 b - - 0 78';
 
 // Scenario 3. There is a check mate and user can't make any moves.
+// eslint-disable-next-line
 const TEST_CHECK_MATE_SCENARIO = 'rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3';
 
 // Scenario 4. There are insufficient pieces.
+// eslint-disable-next-line
 const TEST_INSUCCICIENT__PIECES_SCENARIO = `k7/8/n7/8/8/8/8/7K b - - 0 1`;
 
 // Scenario 5. Checkmake winner (white)
+// eslint-disable-next-line
 const TEST_CHECKMATE_WINNER_STATE = '1R1Q1bB1/4k3/3p4/3Pp3/1Pp1Pp2/2P2K2/3Q2p1/1q6 b - - 0 25';
 
 const chess = new Chess();
@@ -127,21 +132,29 @@ function updateSubject(pendingPromotion, reset) {
 }
 
 export function applyRemotePlayerGame(currentUser, game) {
-  !game && alert('No game object received from the remote player!');
-  !game.players && alert('Game object received from remote is problematic.');
+  if (!game) {
+    alert('No game object received from the remote player!');
+    return;
+  }
 
-  // Check newly added players in the received game object's players list.
-  let newPlayers = game.players.filter(
-    newPlayer =>
-      !multiplayerGame.players.some(existingPlayer => existingPlayer.uid === newPlayer.uid)
-  );
-
-  // Add the newly found players to our global multiplayerGame object's players list.
-  if (newPlayers.length > 0) {
-    for (let newPlayer of newPlayers) {
-      alert(`The opponent has joined! ${JSON.stringify(newPlayer)}`);
-      multiplayerGame.players.push(newPlayer);
+  if (!multiplayerGame) {
+    console.log('Multiplayer game object is null.');
+    multiplayerGame = JSON.parse(JSON.stringify(game));
+  } else if (game.players) {
+    // Check newly added players in the received game object's players list.
+    let newPlayers = game.players.filter(
+      newPlayer =>
+        !multiplayerGame.players.some(existingPlayer => existingPlayer.uid === newPlayer.uid)
+    );
+    // Add the newly found players to our global multiplayerGame object's players list.
+    if (newPlayers.length > 0) {
+      for (let newPlayer of newPlayers) {
+        alert(`The opponent has joined! ${JSON.stringify(newPlayer)}`);
+        multiplayerGame.players.push(newPlayer);
+      }
     }
+  } else {
+    console.log('Game object received from remote has no players.');
   }
 
   const {pendingPromotion, gameData, ...restOfGame} = game;
