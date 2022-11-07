@@ -29,7 +29,10 @@ function PieceColorPicker({shouldShow, onClose}) {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(game)
     };
-    fetch(`http://localhost:5000/game/${game.gameId}`, requestOptions)
+    fetch(
+      `http://${window.location.hostname}:${process.env.REACT_APP_WEBSOCKET_PORT}/game/${game.gameId}`,
+      requestOptions
+    )
       .then(res => {
         onClose();
         dispatch(setGame(game));
