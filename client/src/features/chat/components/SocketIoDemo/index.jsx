@@ -30,6 +30,7 @@ function SocketIoDemo() {
 
   return (
     <div>
+      {/*
       <h1>
         Play Room: {room} | {isConnected ? 'connected' : 'disconnected'}
       </h1>
@@ -39,6 +40,7 @@ function SocketIoDemo() {
           {r}
         </button>
       ))}
+      */}
 
       <h1>Chat:</h1>
 
