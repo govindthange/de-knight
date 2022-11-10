@@ -53,7 +53,7 @@ function Home() {
                 </div>
                 <div className="navbar-menu" id="navbarTopMain">
                   <div className="navbar-end">
-                    <a href="#" className="navbar-item has-text-weight-semibold">
+                    <a href="./nft" className="navbar-item has-text-weight-semibold">
                       <span>NFTs</span>
                       <span className="tag is-primary m-l-5">Mint</span>
                     </a>
@@ -64,6 +64,9 @@ function Home() {
                       className="navbar-item has-text-weight-semibold"
                       onClick={() => onTournamentClick()}>
                       Tournament
+                    </a>
+                    <a href="./swap" className="navbar-item has-text-weight-semibold">
+                      Swaps
                     </a>
                     <a href="#" className="navbar-item has-text-weight-semibold">
                       Marketplace

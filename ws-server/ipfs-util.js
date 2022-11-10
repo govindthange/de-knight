@@ -11,10 +11,10 @@ const ipfs = IpfsApi({
   },
 });
 
-export function pushSampleDataToIpfs() {
+export function pushFileToIpfs(filePath) {
   return new Promise((resolve, reject) => {
-    let sampleFile = fs.readFileSync("./assets/sample-ipfs-data.txt"); // Reading a sample file to test ipfs upload
-    let fileBuffer = new Buffer(sampleFile); // Creating buffer for ipfs function to add file to the system
+    let file = fs.readFileSync(filePath);
+    let fileBuffer = new Buffer(file); // Creating buffer for ipfs function to add file to the system
     ipfs.files.add(fileBuffer, function (err, file) {
       if (err) {
         console.log(err);
@@ -26,4 +26,8 @@ export function pushSampleDataToIpfs() {
   });
 }
 
-export default { pushSampleDataToIpfs };
+export function pushSampleFileToIpfs() {
+  return pushFileToIpfs("./assets/sample-ipfs-data.txt"); // Reading a sample file to test ipfs upload
+}
+
+export default { pushFileToIpfs, pushSampleFileToIpfs };
