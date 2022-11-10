@@ -7,7 +7,6 @@ import Chessboard from './features/chessboard';
 import {useSelector} from 'react-redux';
 import {hasLoggedIn} from './features/authentication/authenticationSlice';
 import Swap from './features/swap';
-import NFTUpload from './features/nft/components/NFTUpload';
 
 function App() {
   const isLoggedIn = useSelector(hasLoggedIn);
@@ -24,9 +23,6 @@ function App() {
         </Route>
         <Route path="/play/:id">
           <Chessboard></Chessboard>
-        </Route>
-        <Route exact path="/nft">
-          <NFTUpload />
         </Route>
         <Route path="/swap">
           <Swap />
