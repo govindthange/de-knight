@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import IpfsUtil from "./ipfs-util.js";
 
 const ALLOWED_DEFAULT_ORIGIN = process.env.CORS_ALLOWED_DOMAIN;
 const ALLOWED_ORIGINS = [
@@ -53,6 +54,15 @@ const io = new Server(httpServer, {
     // origin: "https://de-chess-production-server.com",
     // credentials: true
   },
+});
+
+// nft/test router for adding a local file to the IPFS network w/o a local node
+app.get("/nft/test", async function (req, res) {
+  let result = await IpfsUtil.pushSampleDataToIpfs();
+  res.writeHead(200, { "Content-Type": "application/json" });
+  let data = JSON.stringify(result);
+  res.write(data);
+  res.end();
 });
 
 const games = new Map();
