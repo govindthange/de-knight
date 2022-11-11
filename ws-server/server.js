@@ -67,9 +67,15 @@ app.post("/nft/upload", upload.single("file"), async function (req, res) {
   const description = req.body.description;
   console.log({ name, description });
 
-  let result = await IpfsUtil.pushFileToIpfs(
+  let uploadedFiles = await IpfsUtil.pushFileToIpfs(
     `${NFT_UPLOAD_DIRECTORY}${req.file?.filename}`
   );
+
+  let result = { name, description };
+  if (uploadedFiles && uploadedFiles.length > 0) {
+    result.cid = uploadedFiles[0].hash;
+    result.url = uploadedFiles[0].hash;
+  }
 
   res.writeHead(200, { "Content-Type": "application/json" });
   let data = JSON.stringify(result);

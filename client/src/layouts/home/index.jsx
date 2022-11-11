@@ -6,6 +6,7 @@ import NftListing from '../../features/marketplace/components/NftListing';
 import Tournaments from '../../features/tournament/components/Tournaments';
 import PieceColorPicker from '../../features/chessboard/components/PieceColorPicker';
 import NFTUpload from '../../features/nft/components/NFTUpload';
+import {loadBlockchainData} from '../../utils/Web3Util';
 
 function Home() {
   const [isChessPieceColorPickerVisible, setChessPieceColorPicker] = useState(false);
@@ -27,9 +28,29 @@ function Home() {
     setNFTUploadVisibility(false);
   };
 
-  const onSuccessfulNFTUpload = data => {
+  const onSuccessfulNFTUpload = async data => {
     setNFTUploadVisibility(false);
-    alert(JSON.stringify(data));
+    // alert(JSON.stringify(data));
+    console.log(data);
+
+    loadBlockchainData().then(({account, greeterContract}) => {
+      let resultPromise = greeterContract.methods
+        .get()
+        .send({
+          from: account
+        })
+        .once('error', err => {
+          console.log(err);
+          alert('Sorry, something went wrong please try again later.');
+        })
+        .then(receipt => {
+          console.log(receipt);
+          alert(`Great... the NFT is yours! go visit our marketplace to view it.`);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
   };
 
   return (
