@@ -74,7 +74,13 @@ function Chessboard(props) {
   const {isConnected, emit} = useSocketIo(listenerMap);
 
   const fetchGameById = useCallback(gameId => {
-    return fetch(`http://localhost:5000/game/${gameId}`).then(response => response.json());
+    return fetch(
+      `http://${window.location.hostname}:${process.env.REACT_APP_WEBSOCKET_PORT}/game/${gameId}`
+    )
+      .then(response => response.json())
+      .catch(ex => {
+        alert(ex.message);
+      });
   }, []);
 
   const sendGameToRemotePlayer = new useCallback(g => {
