@@ -18,25 +18,37 @@ function SwapForm(props) {
   }
 
   return (
-    <div>
-      <div>
-        <button
-          onClick={event => {
-            setCurrentForm('buy');
-          }}>
-          Buy
-        </button>
-        <button
-          onClick={event => {
-            setCurrentForm('sell');
-          }}>
-          Sell
-        </button>
+    <>
+      <div class="tabs is-boxed">
+        <ul>
+          <li
+            class={currentForm === 'buy' ? 'is-active' : ''}
+            onClick={event => {
+              setCurrentForm('buy');
+            }}>
+            <a>
+              <span class="icon is-small">
+                <i class="fas fa-cart-plus" aria-hidden="true"></i>
+              </span>
+              <span>Buy</span>
+            </a>
+          </li>
+          <li
+            class={currentForm === 'sell' ? 'is-active' : ''}
+            onClick={event => {
+              setCurrentForm('sell');
+            }}>
+            <a>
+              <span class="icon is-small">
+                <i class="fas fa-money-bill" aria-hidden="true"></i>
+              </span>
+              <span>Sell</span>
+            </a>
+          </li>
+        </ul>
       </div>
-      <div>
-        <div>{content}</div>
-      </div>
-    </div>
+      <div>{content}</div>
+    </>
   );
 }
 

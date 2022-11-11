@@ -7,10 +7,12 @@ import Tournaments from '../../features/tournament/components/Tournaments';
 import PieceColorPicker from '../../features/chessboard/components/PieceColorPicker';
 import NFTUpload from '../../features/nft/components/NFTUpload';
 import {loadBlockchainData} from '../../utils/Web3Util';
+import Swap from '../../features/swap';
 
 function Home() {
   const [isChessPieceColorPickerVisible, setChessPieceColorPicker] = useState(false);
   const [isNFTUploadVisible, setNFTUploadVisibility] = useState(false);
+  const [isSwapVisible, setSwapVisibility] = useState(false);
 
   const onTournamentClick = () => {
     setChessPieceColorPicker(true);
@@ -53,6 +55,14 @@ function Home() {
     });
   };
 
+  const onSwap = () => {
+    setSwapVisibility(true);
+  };
+
+  const onCloseSwap = () => {
+    setSwapVisibility(false);
+  };
+
   return (
     <>
       <PieceColorPicker
@@ -65,6 +75,8 @@ function Home() {
         onClose={onCloseNFTUpload}
         onSuccessfulUpload={onSuccessfulNFTUpload}
       />
+
+      <Swap shouldShow={isSwapVisible} onClose={onCloseSwap} />
 
       <div id="app">
         <section className="hero is-fullheight is-light">
@@ -110,7 +122,7 @@ function Home() {
                       onClick={() => onTournamentClick()}>
                       Tournament
                     </a>
-                    <a href="./swap" className="navbar-item has-text-weight-semibold">
+                    <a className="navbar-item has-text-weight-semibold" onClick={() => onSwap()}>
                       Swaps
                     </a>
                     <a href="#" className="navbar-item has-text-weight-semibold">
