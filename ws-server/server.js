@@ -3,6 +3,8 @@ import { Server } from "socket.io";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import IpfsUtil from "./ipfs-util.js";
+import multer from "multer";
 
 const ALLOWED_DEFAULT_ORIGIN = process.env.CORS_ALLOWED_DOMAIN;
 const ALLOWED_ORIGINS = [
@@ -13,6 +15,8 @@ const ALLOWED_ORIGINS = [
   "http://localhost:3456",
   "http://127.0.0.1:3456",
 ];
+
+const NFT_UPLOAD_DIRECTORY = "uploads/";
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,6 +57,33 @@ const io = new Server(httpServer, {
     // origin: "https://de-chess-production-server.com",
     // credentials: true
   },
+});
+
+// You may specify os.tmpdir()
+const upload = multer({ dest: NFT_UPLOAD_DIRECTORY });
+
+app.post("/nft/upload", upload.single("file"), async function (req, res) {
+  const name = req.body.name;
+  const description = req.body.description;
+  console.log({ name, description });
+
+  let result = await IpfsUtil.pushFileToIpfs(
+    `${NFT_UPLOAD_DIRECTORY}${req.file?.filename}`
+  );
+
+  res.writeHead(200, { "Content-Type": "application/json" });
+  let data = JSON.stringify(result);
+  res.write(data);
+  res.end();
+});
+
+// nft/test router for adding a local file to the IPFS network w/o a local node
+app.get("/nft/test", async function (req, res) {
+  let result = await IpfsUtil.pushSampleFileToIpfs();
+  res.writeHead(200, { "Content-Type": "application/json" });
+  let data = JSON.stringify(result);
+  res.write(data);
+  res.end();
 });
 
 const games = new Map();

@@ -15,7 +15,6 @@ services:
       - 9999:9999
     links:
       - blockchain
-      - ipfs
     environment:
       - BLOCKCHAIN_HOST=blockchain
       - BLOCKCHAIN_PORT=8545
@@ -61,6 +60,8 @@ services:
     ports:
       - ${WS_PORT}:${WS_PORT}
       - 8989:8989
+    links:
+      - ipfs
     environment:
       - WS_PORT=${WS_PORT}
       - CORS_ALLOWED_DOMAIN=${CORS_ALLOWED_DOMAIN}
