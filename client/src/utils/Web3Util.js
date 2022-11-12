@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import Token from '../contracts/Token.json';
 import * as Swap from '../contracts/EthSwap.json';
+import * as Greeter from '../contracts/Greeter.json';
 
 async function loadWeb3() {
   if (window.ethereum) {
@@ -36,6 +37,10 @@ function loadContract(name, abi, networks) {
 }
 
 function loadBlockchainData() {
+  return loadWeb3().then(() => loadAllBlockchainData());
+}
+
+function loadAllBlockchainData() {
   return (
     loadAccount()
       // load Token contract here...
@@ -52,12 +57,37 @@ function loadBlockchainData() {
       })
       .then(([data, balance]) => ({tokenBalance: balance.toString(), ...data}))
 
-      // load Swap contract here...
-      .then(data => Promise.all([data, loadContract(Swap.contractName, Swap.abi, Swap.networks)]))
+      // load contracts here...
+      .then(data =>
+        Promise.all([
+          data,
+          loadContract(Swap.contractName, Swap.abi, Swap.networks),
+          loadContract(Greeter.contractName, Greeter.abi, Greeter.networks)
+        ])
+      )
 
       // Merge data...
-      .then(([data, swapContract]) => ({loading: false, swapContract, ...data}))
+      .then(([data, swapContract, greeterContract]) => ({
+        loading: false,
+        swapContract,
+        greeterContract,
+        ...data
+      }))
   );
 }
 
-export {loadWeb3, loadBlockchainData};
+function loadAccountAndContract(name, abi, networks) {
+  return (
+    loadAccount()
+      // load Token contract here...
+      .then(data => Promise.all([data, loadContract(name, abi, networks)]))
+      // Merge data...
+      .then(([data, contract]) => ({
+        loading: false,
+        contract,
+        ...data
+      }))
+  );
+}
+
+export {loadBlockchainData};

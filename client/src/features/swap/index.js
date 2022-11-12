@@ -19,8 +19,6 @@ class Swap extends Component {
   }
 
   async componentDidMount() {
-    await Util.loadWeb3();
-
     Util.loadBlockchainData()
       .then(data => {
         console.log(data);

@@ -7,6 +7,7 @@ import Chessboard from './features/chessboard';
 import {useSelector} from 'react-redux';
 import {hasLoggedIn} from './features/authentication/authenticationSlice';
 import Swap from './features/swap';
+import GreetContracts from './features/greet-contracts';
 
 function App() {
   const isLoggedIn = useSelector(hasLoggedIn);
@@ -26,6 +27,9 @@ function App() {
         </Route>
         <Route path="/swap">
           <Swap />
+        </Route>
+        <Route path="/greet">
+          <GreetContracts />
         </Route>
       </Switch>
     </Router>
