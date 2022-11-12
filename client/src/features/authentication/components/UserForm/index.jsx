@@ -2,10 +2,11 @@ import './index.css';
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {login} from '../../authenticationSlice';
+import {nanoid} from '@reduxjs/toolkit';
 
 function UserForm() {
-  const [name, setName] = useState('Player 1');
-  const [uid, setUid] = useState('p1');
+  const [name, setName] = useState('');
+  const [uid, setUid] = useState(nanoid());
   const dispatch = useDispatch();
 
   const onSubmit = async evt => {
@@ -19,7 +20,7 @@ function UserForm() {
 
   return (
     <form className="user-form" onSubmit={onSubmit}>
-      <h1>Enter your name to start</h1>
+      <h1>By what name you'd like to play?</h1>
       <br />
       <div className="field">
         <p className="control">
@@ -28,17 +29,7 @@ function UserForm() {
             name=""
             id=""
             className="input"
-            placeholder="User ID"
-            value={uid}
-            onChange={e => setUid(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            name=""
-            id=""
-            className="input"
-            placeholder="User Name"
+            placeholder="Pick any name..."
             value={name}
             onChange={e => setName(e.target.value)}
             required
@@ -48,7 +39,7 @@ function UserForm() {
       <div className="field">
         <p className="control">
           <button className="button is-success" type="submit">
-            Start
+            Get in
           </button>
         </p>
       </div>

@@ -10,6 +10,13 @@ const authenticationSlice = createSlice({
     // Now, when we do an export later in the code,
     // we are essentially exporting the action-creator
     // functions which are automatically created.
+    initialize: mutableState => {
+      let user = window.localStorage.getItem('de-chess/user');
+      if (user) {
+        mutableState.user = JSON.parse(user);
+        mutableState.isLoggedIn = true;
+      }
+    },
     login: (mutableState, action) => {
       // Generally you should not change the state
       // but react toolkit (RTK) uses Immer js internally.
@@ -34,7 +41,7 @@ const authenticationSlice = createSlice({
 
 // Note that we didn't setup action-creator manually!
 // We actually setup a function that automatically returns it.
-export const {login, logout} = authenticationSlice.actions;
+export const {initialize, login, logout} = authenticationSlice.actions;
 
 // Create a state selector in the slice for data points
 // which you foresee might change in the future.

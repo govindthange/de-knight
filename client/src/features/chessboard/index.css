@@ -190,3 +190,14 @@
   content: '✨ ';
   font-size: 1.5em;
 }
+
+.click-here {
+  width: 100px;
+  position: absolute;
+  bottom: 0.25em;
+  left: 5.5em;
+}
+
+.empty-box {
+  height: 3px;
+}
