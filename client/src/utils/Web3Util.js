@@ -2,6 +2,7 @@ import Web3 from 'web3';
 import Token from '../contracts/Token.json';
 import * as Swap from '../contracts/EthSwap.json';
 import * as Greeter from '../contracts/Greeter.json';
+import * as ChessNFT from '../contracts/ChessNFT.json';
 
 async function loadWeb3() {
   if (window.ethereum) {
@@ -10,6 +11,29 @@ async function loadWeb3() {
   } else if (window.web3) {
     window.web3 = new Web3(window.web3.currentProvider);
   }
+
+  /*
+  if (!window.web3.debug || !window.web3.debug.traceTransaction) {
+    window.web3.debug.traceTransaction = function (txHash, callback) {
+      window.web3.currentProvider.sendAsync(
+        {
+          jsonrpc: '2.0',
+          method: 'debug_traceTransaction',
+          params: [txHash],
+          id: new Date().getTime()
+        },
+        (error, result) => {
+          callback(error, error ? result : result.result);
+        }
+      );
+    };
+
+    // Note: Below code is to be used after send() transaction
+    // window.web3.debug.traceTransaction(txHashReceivedFromSendCall, function (error, trace) {
+    //   console.log(trace.returnValue);
+    // });
+  }
+  */
 }
 
 function loadAccount() {
@@ -62,15 +86,17 @@ function loadAllBlockchainData() {
         Promise.all([
           data,
           loadContract(Swap.contractName, Swap.abi, Swap.networks),
-          loadContract(Greeter.contractName, Greeter.abi, Greeter.networks)
+          loadContract(Greeter.contractName, Greeter.abi, Greeter.networks),
+          loadContract(ChessNFT.contractName, ChessNFT.abi, ChessNFT.networks)
         ])
       )
 
       // Merge data...
-      .then(([data, swapContract, greeterContract]) => ({
+      .then(([data, swapContract, greeterContract, chessNFTContract]) => ({
         loading: false,
         swapContract,
         greeterContract,
+        chessNFTContract,
         ...data
       }))
   );

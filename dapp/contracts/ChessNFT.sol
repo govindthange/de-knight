@@ -14,19 +14,43 @@ contract ChessNFT is ERC721URIStorage, Ownable {
     string public constant NftName = "ChessNFT";
     string public constant NftSymbol = "CNFT";
 
+    event ChessNFTMinted(address minter, string tokenUri, uint256 tokenId);
+
     constructor() ERC721(NftName, NftSymbol) {}
 
-    function mintNFT(address recipient, string memory tokenURI)
+    function mintFromOwner(address recipient, string memory tokenURI)
         public
         onlyOwner
         returns (uint256)
     {
         _tokenIds.increment();
 
-        uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+        uint256 tokenId = _tokenIds.current();
+        _mint(recipient, tokenId);
+        _setTokenURI(tokenId, tokenURI);
 
-        return newItemId;
+        emit ChessNFTMinted(msg.sender, tokenURI, tokenId);
+
+        return tokenId;
+    }
+
+    function mint(string memory tokenURI) public returns (uint256) {
+        _tokenIds.increment();
+
+        uint256 tokenId = _tokenIds.current();
+        _mint(msg.sender, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+
+        emit ChessNFTMinted(msg.sender, tokenURI, tokenId);
+
+        return tokenId;
+    }
+
+    function reflectMint(string memory tokenURI)
+        public
+        pure
+        returns (string memory)
+    {
+        return tokenURI;
     }
 }

@@ -6,6 +6,7 @@ import NftListing from '../../features/marketplace/components/NftListing';
 import Tournaments from '../../features/tournament/components/Tournaments';
 import PieceColorPicker from '../../features/chessboard/components/PieceColorPicker';
 import NFTUpload from '../../features/nft/components/NFTUpload';
+import {loadBlockchainData} from '../../utils/Web3Util';
 
 function Home() {
   const [isChessPieceColorPickerVisible, setChessPieceColorPicker] = useState(false);
@@ -27,9 +28,90 @@ function Home() {
     setNFTUploadVisibility(false);
   };
 
-  const onSuccessfulNFTUpload = data => {
+  const onSuccessfulNFTUpload = async data => {
     setNFTUploadVisibility(false);
-    alert(JSON.stringify(data));
+    // alert(JSON.stringify(data));
+    console.log(data);
+
+    loadBlockchainData().then(({account, chessNFTContract}) => {
+      const willingToPayGas = '5000000';
+      /*
+      // TODO: Implement gas-estimation-input
+      // Provide how much gas you are willing to pay
+      // and get the actual estimated gas for the method
+      chessNFTContract.methods
+        .mint(data.url)
+        .estimateGas({
+          from: account
+          // to: CONFIG.CONTRACT_ADDRESS,
+          // gasLimit: String(totalGasLimit),
+          // gas: max-gas-you-are-willing-to-pay, // 5000000
+          // value: totalCostInWeiToBeTransferred
+        })
+        .then(gasAmount => {
+          alert(`The estimated gas for minting is ${gasAmount}`);
+          if (gasAmount == 5000000) alert('The mint function ran out of gas!');
+        })
+        .catch(error => alert(error ? error.message : error));
+        */
+
+      // Processing response using event-emitter
+      chessNFTContract.methods
+        .mint(data.url)
+        .send({
+          from: account,
+          // to: CONFIG.CONTRACT_ADDRESS,
+          // gasLimit: String(totalGasLimit),
+          gas: willingToPayGas
+          // value: totalCostInWeiToBeTransferred
+        })
+        .on('transactionHash', txnHash => alert(`NFT Mint Transaction Hash: ${txnHash}`))
+        .on('confirmation', (confirmationNumber, receipt) => {
+          console.log(JSON.stringify(receipt));
+          alert(`NFT Mint Confirmation Number: ${confirmationNumber}`);
+        })
+        .on('receipt', receipt => {
+          console.log(JSON.stringify(receipt));
+          alert(
+            `Great... we've the transaction the receipt. The NFT is yours! go visit our marketplace to view it.`
+          );
+        })
+        .once('error', error => {
+          console.log(error);
+          alert(error.message);
+        })
+        .once('allEvents', event => {
+          alert(`Contract event received: ${JSON.stringify(event)}`);
+          console.log(event);
+        })
+        .catch((error, receipt) => {
+          console.log(error);
+          console.log(receipt.events);
+        });
+
+      /*
+      // Processing response using promise object
+      chessNFTContract.methods
+        .mintFromOwner(account, data.url)
+        .send({
+          from: account,
+          // to: CONFIG.CONTRACT_ADDRESS,
+          // gasLimit: String(totalGasLimit),
+          gas: willingToPayGas
+          // value: totalCostInWeiToBeTransferred
+        })
+        .then(receipt => {
+          console.log(receipt.events);
+          alert(
+            `Great... we've the transaction the receipt w/ ${receipt.events.length} events. The NFT is yours! go visit our marketplace to view it.`
+          );
+        })
+        .catch((error, receipt) => {
+          alert(error.message);
+          console.log(receipt.events);
+        });
+        */
+    });
   };
 
   return (
