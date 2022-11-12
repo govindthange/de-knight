@@ -76,10 +76,19 @@ class Swap extends Component {
     if (this.state.loading) landingPage = <div>Loading...</div>;
 
     return (
-      <div>
-        <Navbar account={this.state.account} />
-        <div>
-          <div>{landingPage}</div>
+      <div className={`modal ${this.props.shouldShow ? 'is-active' : ''}`}>
+        <div className="modal-background"></div>
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">
+              <Navbar account={this.state.account} />
+            </p>
+            <button
+              className="delete"
+              aria-label="close"
+              onClick={() => this.props.onClose()}></button>
+          </header>
+          <section className="modal-card-body">{landingPage}</section>
         </div>
       </div>
     );

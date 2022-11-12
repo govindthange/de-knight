@@ -1,44 +1,61 @@
 import React, {useCallback, useRef, useState} from 'react';
-import tokenLogo from '../assets/token-logo.png';
-import ethLogo from '../assets/eth-logo.png';
 
-function SellTokenForm(props) {
+function SellTokenForm({onSellTokens, ethBalance, tokenBalance}) {
   const [output, setOutput] = useState('0');
   const input = useRef();
 
   const onSubmit = useCallback(event => {
     event.preventDefault();
     const tokenAmount = window.web3.utils.toWei(input.current.value, 'Ether');
-    props.onSellTokens(tokenAmount);
+    onSellTokens(tokenAmount);
   }, []);
 
   return (
     <form onSubmit={onSubmit}>
-      <label>Input</label>
-      <span>Balance: {window.web3.utils.fromWei(props.tokenBalance, 'Ether')}</span>
-      <div>
-        <input
-          type="text"
-          onChange={event => setOutput(input.current.value / 100)}
-          ref={input}
-          placeholder="0"
-          required
-        />
-        <img src={tokenLogo} alt="CHESS Logo" /> &nbsp; CHESS
+      <div class="field">
+        <label class="label">Convert</label>
+        <div class="control has-icons-left has-icons-right">
+          <input
+            class="input is-info"
+            type="text"
+            placeholder="0"
+            onChange={event => setOutput(input.current.value / 100)}
+            ref={input}
+            required
+          />
+          <span class="icon is-left">♞</span>
+          <span class="icon is-medium is-right mr-2">CHESS</span>
+        </div>
+        <p class="help is-info">
+          Input Balance: {window.web3.utils.fromWei(tokenBalance, 'Ether')} ♞
+        </p>
       </div>
-      <div>
-        <label>Output</label>
-        <span>Balance: {window.web3.utils.fromWei(props.ethBalance, 'Ether')}</span>
+
+      <div class="field">
+        <label class="label">To</label>
+        <div class="control has-icons-left has-icons-right">
+          <input class="input is-primary" type="text" placeholder="?" value={output} disabled />
+          <span class="icon is-left">♦</span>
+          <span class="icon is-medium is-right">ETH</span>
+        </div>
+        <p class="help is-info">
+          Output Balance: {window.web3.utils.fromWei(ethBalance, 'Ether')} ♦
+        </p>
       </div>
-      <div>
-        <input type="text" placeholder="0" value={output} disabled />
-        <img src={ethLogo} alt="ETH Logo" /> &nbsp; ETH
+
+      <div class="field">
+        <div class="control">
+          <strong>Exchange Rate: </strong>100 CHESS = 1 ETH
+        </div>
       </div>
-      <div>
-        <span>Exchange Rate</span>
-        <span>100 CHESS = 1 ETH</span>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button type="submit" class="button is-primary">
+            Swap
+          </button>
+        </div>
       </div>
-      <button type="submit">Swap</button>
     </form>
   );
 }
