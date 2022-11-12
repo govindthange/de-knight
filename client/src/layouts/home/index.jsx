@@ -5,9 +5,11 @@ import Footer from './components/Footer';
 import NftListing from '../../features/marketplace/components/NftListing';
 import Tournaments from '../../features/tournament/components/Tournaments';
 import PieceColorPicker from '../../features/chessboard/components/PieceColorPicker';
+import NFTUpload from '../../features/nft/components/NFTUpload';
 
 function Home() {
   const [isChessPieceColorPickerVisible, setChessPieceColorPicker] = useState(false);
+  const [isNFTUploadVisible, setNFTUploadVisibility] = useState(false);
 
   const onTournamentClick = () => {
     setChessPieceColorPicker(true);
@@ -17,12 +19,32 @@ function Home() {
     setChessPieceColorPicker(false);
   };
 
+  const onNFTUpload = () => {
+    setNFTUploadVisibility(true);
+  };
+
+  const onCloseNFTUpload = () => {
+    setNFTUploadVisibility(false);
+  };
+
+  const onSuccessfulNFTUpload = data => {
+    setNFTUploadVisibility(false);
+    alert(JSON.stringify(data));
+  };
+
   return (
     <>
       <PieceColorPicker
         shouldShow={isChessPieceColorPickerVisible}
         onClose={onClosePieceColorPicker}
       />
+
+      <NFTUpload
+        shouldShow={isNFTUploadVisible}
+        onClose={onCloseNFTUpload}
+        onSuccessfulUpload={onSuccessfulNFTUpload}
+      />
+
       <div id="app">
         <section className="hero is-fullheight is-light">
           <div className="hero-head">
@@ -53,7 +75,9 @@ function Home() {
                 </div>
                 <div className="navbar-menu" id="navbarTopMain">
                   <div className="navbar-end">
-                    <a href="#" className="navbar-item has-text-weight-semibold">
+                    <a
+                      className="navbar-item has-text-weight-semibold"
+                      onClick={() => onNFTUpload()}>
                       <span>NFTs</span>
                       <span className="tag is-primary m-l-5">Mint</span>
                     </a>
@@ -64,6 +88,9 @@ function Home() {
                       className="navbar-item has-text-weight-semibold"
                       onClick={() => onTournamentClick()}>
                       Tournament
+                    </a>
+                    <a href="./swap" className="navbar-item has-text-weight-semibold">
+                      Swaps
                     </a>
                     <a href="#" className="navbar-item has-text-weight-semibold">
                       Marketplace
