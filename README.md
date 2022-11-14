@@ -1,75 +1,106 @@
-# De-Knight
+# ♞ De-Knight
 
-`De-Knight` is a `play-to-earn` game that deploys major elements of blockchain technology such as cryptocurrencies, non-fungible tokens, crowdfunding, multi-sig wallets, governance, DAO, etc. The players collect cryptocurrencies and NFTs produced in the blockchain and can also generate income by selling in-game NFTs or earn cryptocurrency rewards, both of which can be exchanged for fiat cash.
+`De-Knight` is a `play-to-earn` game that makes extensive use of blockchain technology, including cryptocurrencies, non-fungible tokens, crowdfunding, escrow, multi-sig wallets, governance, voting, and DAO. The players can earn money by selling freely earned in-game NFTs as well as by collecting cryptocurrencies and NFTs created in the blockchain.
 
-# De-Knight Game Highlights
+---
 
-## # Play Solo
+# 📅 Roadmap
 
-## # Play Tournament
+## 🏳️ Solo Game
 
-### Text Chat
+## 🏳️ Multiplayer Game
 
-### Video Chat
+### 🏴 Scan-to-Play ✔️
 
-## # Currency/Token Swap
+### 🏴 Text Chat ✔️
 
-## # NFT Minting
+## 🏳️ Tournament
 
-## # Marketplace
+### 🏴 Scan-to-Play ✔️
 
-## # Crowdfunding
+### 🏴 Member Chat ✔️
 
-De-Knight supports crowdfunding through `peer-to-peer` fund raising model that removes the need for intermediaries. The game's `CHESS (♞)` coins are exchangeable over peer to peer network.
+### 🏴 Video Chat
 
-This blockchain-powered fundraising mechanism offer a solution to tournament organizers who plan to commit resources, time and money for a chess tournaments by renting venue for conducting the match and marketing the same. With De-Knight' crowdfunding feature the organizers can test market acceptance and viability before committing the accumulated funds. This market knowledge makes tournament organizers more willing to take on the financial risk to arrange match that could be profitable.
+### 🏴 Rating
 
-### **So how does De-Knight crowdfunding work?**
+## 🏳️ Token Swaps
 
-When a potential organizer of a chess tournament presents the initiative of a new chess match, interested parties may choose to support the event.
+### 🏴 ♦ ⇄ ♞
 
-Each supporter transfers the required amount in `CHESS (♞)` coins to an escrow wallet bound by a De-Knight smart contract. The creator can launch a tournament when the total amount in escrow reaches the target within a specified period.
+- ETH ♦ → DGT ♞ ✔️
+- DGT ♞ → ETH ♦ ✔️
 
-### The 3 crowdfunding scenarios
+## 🏳️ NFT & Collectibles
 
-1. Once a tournament is created, published and accepted by the majority of the donors through a governance voting system, the complete funds are released to the organizers.
+### 🏴 Minting NFT ✔️
 
-2. When each milestone (such as renting a venue for a chess, or completion of a marketing campaign) is reached and accepted by a predefined ratio of supporters, then a portion of the funds is released to facilitate project progress.
+### 🏴 IPFS Storage ✔️
 
-3. When the tournament is created and released or made live for public, the funds can be released to the organizers with or without donor acceptance independent of donor acceptance levels.
+## 🏳️ Marketplace
 
-The predetermined amount from the escrow wallet will be transferred to the creator once consensus is reached. In this way, the smart contract insulates donors against judgment errors from project creators.
+### 🏴 Buy/Sell NFT
 
-### The De-Knight Crowdfunding Contract
+### 🏴 Buy/Sell DGT Coins
 
-It is a fully customizable smart contracts that defines the terms of the contract, the conditions under which funds are released to the tournament organizers. The contract allows donors (tournament audience) to choose campaigns offering terms they agree with. It also creates a transparent relationship where tournament organizers and donors are protected. Donors can safely contribute to their favorite chess tournaments. Audience can support any tournament and purchase digital products.
+## 🏳️ Crowdfunding
 
-# De-Knight Governance Token (DGT)
+### 🏴 Propose Campaign
+
+### 🏴 Voting
+
+### 🏴 Launch Campaign Deed ✔️
+
+### 🏴 Cancel Campaign Deed ✔️
+
+### 🏴 Pledge Fund Deed ✔️
+
+### 🏴 Unpledge Fund Deed ✔️
+
+### 🏴 Claim Funds Deed ✔️
+
+- Joint Approval w/ Multi-Sig Wallet
+
+### 🏴 Refund Funds Deed ✔️
+
+### 🏴 Crowdfunding UI Workflow
+
+### 🏴 Refund Campaign ✔️
+
+## 🏳️ Governance
+
+### 🏴 ICO
+
+### 🏴 Voting
+
+---
+
+# 🏁 De-Knight Governance Token (DGT, ♞)
 
 DGT enables its owners to make decisions in a decentralized manner.
 
 - It is used to form DAO which is a governing body for the project.
 - It facilitates decentralized communication between DGT holders.
 
-### **Why is this important?**
+### ☝️ **Why is this important?**
 
-In a traditional centralized organization decision making is bestowed upon a single leader or a small group of board members. Only they have the power to set rules & regulations and decide on the future direction of the organization. This leaves individuals, users, investors to be struck off from the whole conversation regarding its governance.
+In a traditional centralized organization decision making is bestowed upon a single leader or a small group of board members. Only they have the power to establish guidelines, set rules and determine the organization's future course. This leaves individuals, users, investors to be struck off from the whole conversation regarding its governance.
 
 In the web3 world with the power of smart contracts any individual who obtains governance tokens for a protocol may now participate in this decentralized communication with other governance token holders, put forward proposals on new rules or future direction and in turn vote for proposals put forth by others in the community.
 
-# De-Knight Governance
+# 🏁 De-Knight Governance
 
-## The Logistics
+## 🏳️ The Logistics
 
 To manage the logistics of governance and implementing changes within it, the De-Knight contract allows to mint & sell an initial supply of DGT.
 
-## The Decentralized Autonomous Organization
+## 🏳️ The Decentralized Autonomous Organization
 
-Individuals or groups who choose to purchase initially minted tokens form a DAO which essentially is a simple governing body for the De-Knight project.
+DAO is a governing body for the De-Knight project. Individuals or groups who choose to purchase initially minted tokens form a DAO.
 
-This DAO setup is run by a portfolio of De-Knight smart contracts which allows DGT holders to coordinate online, make decisions autonomously without ever knowing each other and establish rules that are encoded on a blockchain.
+De-Knight DAO is run by a portfolio of smart contracts that allows DGT holders to coordinate online, make decisions autonomously without ever knowing each other and establish rules that are encoded in a blockchain.
 
-### **What decisions could De-Knight DAO make?** _- you may ask._
+### ☝️ **What decisions could De-Knight DAO make?** _- you may ask._
 
 DAO through a portfolio of smart contracts controls how money moves within blockchain and how the money in the treasury gets spent. It therefore allows you to:
 
@@ -78,25 +109,47 @@ DAO through a portfolio of smart contracts controls how money moves within block
 - Decide whether you want to hire somebody for an offline task.
 - Decide whether you want to fire somebody for doing a bad job.
 
-### **How much power does DGT holders actually possess?**
+### ☝️ **How much power does DGT holders actually possess?**
 
 The DGT holders vote on how the money in the treasury gets spent.
 
-Usually 1 DGT indicates 1 Vote but this gives unfair advantage to those who hold more tokens.
+Usually 1 DGT indicates 1 Vote but this gives unfair advantage to those who hold more tokens. Rather than favoring the number of tokens held, the De-Knight smart contracts favor the time a certain wallet has held their governance tokens for. It incentivizes early adopters who believed in the project and have been along for decision making processes for the longest.
 
-Rather than favoring the number of tokens held the De-Knight smart contracts favor the time a certain wallet has held their governance tokens for. It incentizes early adopters who believed in the project and have been along for decision making processes for the longest.
+# 🏁 De-Knight Treasury
 
-# De-Knight Treasury
+The treasury is made up of the proceeds from the ICO. Any initiatives that receive support from the majority of token holders can be funded by the Treasury. In other words, the treasury allows for the funding for any proposals reaching a majority consensus amongst the token holders. These treasuries can later grow in value even further through liquid treasury and events such as staking, transaction fees.
 
-The funds generated from the initial tokens form the treasury. The treasury allows for the funding for any proposals reaching a majority consensus amongst the token holders. These treasuries can later grow in value even further through liquid treasury and events such as staking, transaction fees.
+# 🏁 De-Knight Crowdfunding
 
-# De-Knight Tournament Campaign Workflow
+De-Knight supports crowdfunding through `peer-to-peer` fund raising model that removes the need for intermediaries. The game's `DGT (♞)` coins are exchangeable over peer to peer network.
 
-1. Event organizers proposes a chess tournament.
+This blockchain-based fundraising system provides an option for tournament organisers who plan to commit time, money, and resources to either renting a location for the match or spending money on marketing. With this crowdfunding feature the organisers can assess market acceptance & viability even before committing the accumulated funds. This knowledge makes tournament organizers even more willing to take on the financial risk of scheduling potentially lucrative matches.
+
+### ☝️ **So how does De-Knight crowdfunding work?**
+
+When some organizer of proposes a chess tournament, interested parties like investor, sponsors, and donors may support this event by pledging funds or buying NFTs.
+
+Each supporter transfers a certain amount of `DGT (♞)` tokens to the Crowdfund contract. Crowdfund contract acts like an escrow account. When the total amount in this escrow account reaches the desired amount within a stipulated time frame, the organizer may claim the entire fund to start preparing for the envisaged chess tournament.
+
+### 🏳️ The 2 scenarios
+
+1. Once the campaign for the proposed tournament is successful and authorised by the designated DAO members via voting, the organisers are given full/partial funding.
+
+2. A portion of the funds is released to speed up project progress once each milestone (such as booking a chess venue or finishing a marketing campaign) is achieved and approved by a specific percentage of backers.
+
+### 🏳️ The De-Knight Crowdfunding Contract
+
+Crowdfunding is a program that defines and enforces all the terms & conditions under which the collected funds are to be released to the tournament organizers. This contract allows investors, sponsors, or donors to choose a campaign that they wish to invest/donate in. The Crowdfund contract enables a transparent relationship where organizers and investors/sponsors/donors are protected. Donors/sponsors can safely contribute to their favorite chess tournaments. The audience may also buy NFTs to support the tournament.
+
+### 🏳️ De-Knight Tournament Campaign Workflow
+
+1. Event organizer proposes a chess tournament.
 2. DGT holders vote for the proposal through De-Knight Governance contract.
-3. Based on voting the De-Knight's designated/elected group through its multi-sig wallets approve the creation of a chess tournament campaign.
+3. Based on the voting result the De-Knight's designated/elected members, through its multi-sig wallets, approve the creation of a chess tournament campaign.
 4. Event organizers execute Crowdfund::launch() w/ campaign's start date, end date and goal.
-5. Investors/Donars execute Crowdfund::pledge()/unpledge() before campaign's end date.
-6. If the campaign's goal is not met by the end date then the Crowdfund contract allows refund to be initiated by the investors/donors.
+5. Investors/sponsors/donors execute Crowdfund::pledge()/unpledge() before campaign's end date.
+6. If the campaign's goal is not met by the end date then the Crowdfund contract allows refund to be initiated by the investors/sponsors/donors.
 7. If the campaign's goal is met by the end date then the organizers can initiate Crowdfund::claim() transaction.
 8. Claims are approved through multi-sig wallet.
+
+---
