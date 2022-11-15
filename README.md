@@ -1,6 +1,6 @@
 # ♞ De-Knight
 
-`De-Knight` is a `play-to-earn` game that makes extensive use of blockchain technology, including cryptocurrencies, non-fungible tokens, crowdfunding, escrow, multi-sig wallets, governance, voting, and DAO. The players can earn money by selling freely earned in-game NFTs as well as by collecting cryptocurrencies and NFTs created in the blockchain.
+`De-Knight` is a `play-to-earn` game that makes extensive use of blockchain technology, including cryptocurrencies, non-fungible tokens, crowdfunding, escrow, multi-sig wallets, governance, voting, de-KYC, Oracles and DAO. The players can earn money by selling freely earned in-game NFTs as well as by collecting cryptocurrencies and NFTs created in the blockchain.
 
 ---
 
@@ -47,21 +47,21 @@
 
 ### 🏴 Propose Campaign
 
-### 🏴 Voting
+### 🏴 Vote Campaign
 
-### 🏴 Launch Campaign Deed ✔️
+### 🏴 Campaign Launch Deed ✔️
 
-### 🏴 Cancel Campaign Deed ✔️
+### 🏴 Campaign Cancel Deed ✔️
 
-### 🏴 Pledge Fund Deed ✔️
+### 🏴 Pledge Deed ✔️
 
-### 🏴 Unpledge Fund Deed ✔️
+### 🏴 Unpledge Deed ✔️
 
-### 🏴 Claim Funds Deed ✔️
+### 🏴 Claim Deed ✔️
 
 - Joint Approval w/ Multi-Sig Wallet
 
-### 🏴 Refund Funds Deed ✔️
+### 🏴 Refund Deed ✔️
 
 ### 🏴 Crowdfunding UI Workflow
 
@@ -72,6 +72,10 @@
 ### 🏴 ICO
 
 ### 🏴 Voting
+
+## 🏳️ De-KYC
+
+### 🏴 Oracle Integration
 
 ---
 
@@ -84,7 +88,7 @@ DGT enables its owners to make decisions in a decentralized manner.
 
 ### ☝️ **Why is this important?**
 
-In a traditional centralized organization decision making is bestowed upon a single leader or a small group of board members. Only they have the power to establish guidelines, set rules and determine the organization's future course. This leaves individuals, users, investors to be struck off from the whole conversation regarding its governance.
+In today's centralized organizations decision making is bestowed upon a single leader or a small group of board members. Only they have the power to establish guidelines, set rules and determine the organization's future course. This leaves individuals, users, investors to be struck off from the whole conversation regarding its governance.
 
 In the web3 world with the power of smart contracts any individual who obtains governance tokens for a protocol may now participate in this decentralized communication with other governance token holders, put forward proposals on new rules or future direction and in turn vote for proposals put forth by others in the community.
 
