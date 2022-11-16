@@ -94,13 +94,13 @@ In the De-Knight's democratic governance model any individual who obtains DGT (�
 
 ## 🏳️ The Logistics
 
-To manage the logistics of governance and implementing changes within it, the De-Knight contract allows to mint & sell an initial supply of DGT.
+To manage the logistics of governance and implementing changes within it, the De-Knight contract allows to mint & sell an initial supply of DGT coins (♞).
 
-## 🏳️ The Decentralized Autonomous Organization
+## 🏳️ The Decentralized Autonomous Organization (DAO)
 
-DAO is a governing body for the De-Knight project. Individuals or groups who choose to purchase initially minted tokens form a DAO.
+DAO is essentially a governing body formed by the community and for by the community to drive De-Knight project goals. Individuals or groups who choose to purchase initially minted tokens are at the core of this governance.
 
-De-Knight DAO is run by a portfolio of smart contracts that allows DGT holders to coordinate online, make decisions autonomously without ever knowing each other and establish rules that are encoded in a blockchain.
+De-Knight DAO is run by a portfolio of smart contracts that allows DGT holders to coordinate online, make decisions autonomously without ever knowing each other and establish rules that are encoded in the blockchain.
 
 ### ☝️ **What decisions could De-Knight DAO make?** _- you may ask._
 
