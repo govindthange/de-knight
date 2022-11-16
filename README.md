@@ -2,6 +2,8 @@
 
 `De-Knight` is a `play-to-earn` game that makes extensive use of blockchain technology, including cryptocurrencies, non-fungible tokens, crowdfunding, escrow, multi-sig wallets, governance, voting, decentralized KYC, Oracles and DAO. The players can earn money by selling freely earned in-game NFTs as well as by collecting cryptocurrencies and NFTs created in the blockchain.
 
+![](./vault/diagrams/architecture-white.v2.png)
+
 ---
 
 # 📅 Roadmap
