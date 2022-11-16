@@ -1,6 +1,6 @@
 # ♞ De-Knight
 
-`De-Knight` is a `play-to-earn` game that makes extensive use of blockchain technology, including cryptocurrencies, non-fungible tokens, crowdfunding, escrow, multi-sig wallets, governance, voting, de-KYC, Oracles and DAO. The players can earn money by selling freely earned in-game NFTs as well as by collecting cryptocurrencies and NFTs created in the blockchain.
+`De-Knight` is a `play-to-earn` game that makes extensive use of blockchain technology, including cryptocurrencies, non-fungible tokens, crowdfunding, escrow, multi-sig wallets, governance, voting, decentralized KYC, Oracles and DAO. The players can earn money by selling freely earned in-game NFTs as well as by collecting cryptocurrencies and NFTs created in the blockchain.
 
 ---
 
@@ -49,23 +49,21 @@
 
 ### 🏴 Vote Campaign
 
-### 🏴 Campaign Launch Deed ✔️
+### 🏴 Launch Campaign ✔️
 
-### 🏴 Campaign Cancel Deed ✔️
+### 🏴 Cancel Campaign ✔️
 
-### 🏴 Pledge Deed ✔️
+### 🏴 Pledge Funds ✔️
 
-### 🏴 Unpledge Deed ✔️
+### 🏴 Unpledge Funds ✔️
 
-### 🏴 Claim Deed ✔️
+### 🏴 Claim Funds ✔️
 
 - Joint Approval w/ Multi-Sig Wallet
 
-### 🏴 Refund Deed ✔️
+### 🏴 Refund ✔️
 
 ### 🏴 Crowdfunding UI Workflow
-
-### 🏴 Refund Campaign ✔️
 
 ## 🏳️ Governance
 
@@ -90,9 +88,9 @@ DGT enables its owners to make decisions in a decentralized manner.
 
 In today's centralized organizations decision making is bestowed upon a single leader or a small group of board members. Only they have the power to establish guidelines, set rules and determine the organization's future course. This leaves individuals, users, investors to be struck off from the whole conversation regarding its governance.
 
-In the web3 world with the power of smart contracts any individual who obtains governance tokens for a protocol may now participate in this decentralized communication with other governance token holders, put forward proposals on new rules or future direction and in turn vote for proposals put forth by others in the community.
+In the De-Knight's democratic governance model any individual who obtains DGT (♞) tokens may participate in a decentralized communication with other DGT token holders, put forward proposals on new rules or future direction of the De-Knight project, vote for proposals put forth by others in the De-Knight community.
 
-# 🏁 De-Knight Governance
+# 🏁 De-Knight Governance Model
 
 ## 🏳️ The Logistics
 
