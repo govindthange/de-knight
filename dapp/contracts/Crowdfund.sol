@@ -138,7 +138,7 @@ contract Crowdfund {
         // we will have to update the campaign
         Campaign storage campaign = campaigns[_id];
 
-        Check whether the unpledge operation is allowed
+        // Check whether the unpledge operation is allowed
         require(
             block.timestamp <= campaign.endAt,
             "Cannot unpledge after campaign ends."
