@@ -2,7 +2,7 @@
 
 `De-Knight` is a `play-to-earn` game that makes extensive use of blockchain technology, including cryptocurrencies, non-fungible tokens, crowdfunding, escrow, multi-sig wallets, governance, voting, decentralized KYC, Oracles and DAO. The players can earn money by selling freely earned in-game NFTs as well as by collecting cryptocurrencies and NFTs created in the blockchain.
 
-![](./vault/diagrams/architecture-white.v2.png)
+![](./vault/diagrams/architecture-white.v3.png)
 
 ---
 
@@ -94,6 +94,8 @@ In the De-Knight's democratic governance model any individual who obtains DGT (�
 
 # 🏁 De-Knight Governance Model
 
+De-Knight has a blockchain-based automated voting and consensus mechanism that manages the administrative aspects of governance.
+
 ## 🏳️ The Logistics
 
 To manage the logistics of governance and implementing changes within it, the De-Knight contract allows to mint & sell an initial supply of DGT coins (♞).
@@ -109,8 +111,8 @@ De-Knight DAO is run by a portfolio of smart contracts that allows DGT holders t
 DAO through a portfolio of smart contracts controls how money moves within blockchain and how the money in the treasury gets spent. It therefore allows you to:
 
 - Act on proposals or RFC/RFEs for upgrades in game mechanics.
-- Decide whether to invest gains from NFT trades in marketing.
-- Decide whether you want to hire somebody for an offline task.
+- Decide whether to invest gains from NFT trades in marketing of chess tournament.
+- Decide whether you want to hire somebody for offline tasks such as booking venue, inviting VIPs/guests.
 - Decide whether you want to fire somebody for doing a bad job.
 
 ### ☝️ **How much power does DGT holders actually possess?**
@@ -131,7 +133,7 @@ This blockchain-based fundraising system provides an option for tournament organ
 
 ### ☝️ **So how does De-Knight crowdfunding work?**
 
-When some organizer of proposes a chess tournament, interested parties like investor, sponsors, and donors may support this event by pledging funds or buying NFTs.
+When a tournament organizer proposes a chess tournament, interested parties like investor, sponsors, and donors may support this event by pledging funds or by buying NFTs.
 
 Each supporter transfers a certain amount of `DGT (♞)` tokens to the Crowdfund contract. Crowdfund contract acts like an escrow account. When the total amount in this escrow account reaches the desired amount within a stipulated time frame, the organizer may claim the entire fund to start preparing for the envisaged chess tournament.
 
