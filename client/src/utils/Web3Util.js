@@ -3,6 +3,7 @@ import Token from '../contracts/Token.json';
 import * as Swap from '../contracts/EthSwap.json';
 import * as Greeter from '../contracts/Greeter.json';
 import * as ChessNFT from '../contracts/ChessNFT.json';
+import * as APIDemo from '../contracts/APIDemo.json';
 
 async function loadWeb3() {
   if (window.ethereum) {
@@ -87,16 +88,18 @@ function loadAllBlockchainData() {
           data,
           loadContract(Swap.contractName, Swap.abi, Swap.networks),
           loadContract(Greeter.contractName, Greeter.abi, Greeter.networks),
-          loadContract(ChessNFT.contractName, ChessNFT.abi, ChessNFT.networks)
+          loadContract(ChessNFT.contractName, ChessNFT.abi, ChessNFT.networks),
+          loadContract(APIDemo.contractName, APIDemo.abi, APIDemo.networks)
         ])
       )
 
       // Merge data...
-      .then(([data, swapContract, greeterContract, chessNFTContract]) => ({
+      .then(([data, swapContract, greeterContract, chessNFTContract, apiDemoContract]) => ({
         loading: false,
         swapContract,
         greeterContract,
         chessNFTContract,
+        apiDemoContract,
         ...data
       }))
   );

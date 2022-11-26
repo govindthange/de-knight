@@ -22,6 +22,33 @@ function GreetContracts() {
     alert('Coming soon...');
   }, []);
 
+  const onGetPrice = useCallback(() => {
+    loadBlockchainData().then(({account, apiDemoContract}) => {
+      let resultPromise = apiDemoContract.methods
+        .ETHUSD()
+        .call()
+        .then(data => {
+          console.log(data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  }, []);
+
+  const onUpdatePrice = useCallback(() => {
+    loadBlockchainData().then(({account, apiDemoContract}) => {
+      let resultPromise = apiDemoContract.methods
+        .updatePrice()
+        .send({
+          from: account
+        })
+        .on('transactionHash', hash => {
+          alert(hash);
+        });
+    });
+  }, []);
+
   return (
     <section className="hero is-link is-fullheight has-background-white">
       <div className="hero-body">
@@ -42,6 +69,16 @@ function GreetContracts() {
             <div className="row mt-4">
               <button className="button is-danger is-outlined" onClick={onCrowdfund}>
                 Crowdfund
+              </button>
+            </div>
+            <div className="row mt-4">
+              <button className="button is-info is-outlined" onClick={onGetPrice}>
+                Provable API (Get ETH/USD Price)
+              </button>
+            </div>
+            <div className="row mt-4">
+              <button className="button is-info is-outlined" onClick={onUpdatePrice}>
+                Provable API (Fetch &amp; Update ETH/USD Price)
               </button>
             </div>
           </div>
