@@ -189,8 +189,8 @@ function Home() {
                     <a href="#" className="navbar-item has-text-weight-semibold">
                       Marketplace
                     </a>
-                    <a href="#" className="navbar-item has-text-weight-semibold">
-                      Crowdfunding
+                    <a href="./governance" className="navbar-item has-text-weight-semibold">
+                      Governance
                     </a>
                     <div className="navbar-item">
                       <a href="/login" className="button is-primary">

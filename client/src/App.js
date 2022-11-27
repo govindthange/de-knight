@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initialize, hasLoggedIn} from './features/authentication/authenticationSlice';
 import Swap from './features/swap';
 import GreetContracts from './features/greet-contracts';
+import Governance from './features/governance';
 
 function App() {
   const dispatch = useDispatch();
@@ -32,6 +33,9 @@ function App() {
         </Route>
         <Route path="/swap">
           <Swap />
+        </Route>
+        <Route path="/governance">
+          <Governance />
         </Route>
         <Route path="/greet">
           <GreetContracts />
