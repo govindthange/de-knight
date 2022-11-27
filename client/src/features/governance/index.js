@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import CampaignList from './components/CampaignList';
+import Crowdsale from './components/Crowdsale';
 import Dashboard from './components/Dashboard';
 import Electorates from './components/Electorates';
 import NewCampaign from './components/NewCampaign';
@@ -22,7 +23,7 @@ function Governance() {
       tabContent = <CampaignList />;
       break;
     case 'crowdsale':
-      tabContent = <div>Crowdsale / ICO</div>;
+      tabContent = <Crowdsale />;
       break;
     case 'treasury':
       tabContent = <Treasury />;

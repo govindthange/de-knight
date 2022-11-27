@@ -4,11 +4,11 @@ function Referendums() {
   return (
     <>
       <div>
-        <div className="is-pulled-left mt-2 ml-5">
+        <div className="notification is-info is-light is-pulled-left">
           <p>
-            As an electorate you can post a new referenda or directly <strong>vote</strong> on an
-            initiated proposal, rule, or RFE. To become an electorate click on the{' '}
-            <strong>Electorates</strong> tab.
+            As an electorate you can <strong>post</strong> a new referenda or directly{' '}
+            <strong>vote</strong> on an initiated proposal, rule, or RFE. To become an electorate
+            click on the <strong>Electorates</strong> tab.
           </p>
         </div>
         <div className="field">

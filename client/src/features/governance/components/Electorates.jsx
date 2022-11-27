@@ -4,7 +4,7 @@ function Electorates() {
   return (
     <>
       <div>
-        <div className="is-pulled-left mt-2 ml-5">
+        <div className="notification is-info is-light is-pulled-left">
           <p>
             Here is the list of all <strong>Externally Owned Accounts (ECA)</strong>, AKA
             electorates, from the De-Knight community who are entitled to vote on a referendum or in
