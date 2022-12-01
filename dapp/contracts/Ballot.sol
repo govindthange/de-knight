@@ -32,9 +32,17 @@ contract Ballot is Owner {
     uint256 public proposalCount;
     Proposal[] public proposals;
 
+    enum ReferendumVote {
+        PENDING,
+        YES,
+        NO,
+        ABSTAIN
+    }
+
     struct Electorate {
         uint256 weight; // weight is accumulated by delegation
-        address delegate; // person delegated to
+        address delegate; // electorate delegated to
+        mapping(uint256 => ReferendumVote) vote; // if not PENDING then that electorate has already voted
     }
 
     mapping(address => Electorate) public electorates;
@@ -141,8 +149,7 @@ contract Ballot is Owner {
         sender.vote = proposal;
 
         // If 'proposal' is out of the range of the array,
-        // this will throw automatically and revert all
-        // changes.
+        // this will throw automatically and revert all changes.
         proposals[proposal].voteCount += sender.weight;
     }
 
@@ -162,5 +169,24 @@ contract Ballot is Owner {
     // @return winnerName_ the name of the winner.
     function winnerName() public view returns (bytes32 winnerName_) {
         winnerName_ = proposals[winningProposal()].name;
+    }
+
+    // @dev Give your vote (including votes delegated to you) to referendum.
+    // @param referendum is the index of referendum in the referendums array.
+    // @param decision is the electorate's decision (YES, NO, or ABSTAIN).
+    function voteReferendum(uint256 referendum, ReferendumVote decision)
+        public
+    {
+        Electorate storage sender = electorates[msg.sender];
+        require(sender.weight != 0, "Has no right to vote");
+        require(
+            sender.vote[referendum] != ReferendumVote.PENDING,
+            "Already voted for the referendum."
+        );
+        sender.vote[referendum] = decision;
+
+        // If 'referendum' is out of the range of the array,
+        // this will throw automatically and revert all changes.
+        referendums[referendum].voteCount += sender.weight;
     }
 }
