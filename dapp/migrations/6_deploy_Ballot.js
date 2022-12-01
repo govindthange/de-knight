@@ -7,6 +7,6 @@ module.exports = async function(deployer) {
   // const owner = await Owner.deployed();
 
   // Deploy Ballot
-  await deployer.deploy(Ballot, []);
+  await deployer.deploy(Ballot);
   const ballot = await Ballot.deployed();
 };

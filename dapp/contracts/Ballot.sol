@@ -14,8 +14,6 @@ contract Ballot is Owner {
     }
 
     struct Proposal {
-        // If you can limit the length to a certain number of bytes,
-        // always use one of bytes1 to bytes32 because they are much cheaper
         bytes32 name; // short name (up to 32 bytes)
         uint256 voteCount; // number of accumulated votes
     }
@@ -34,12 +32,26 @@ contract Ballot is Owner {
     uint256 public proposalCount;
     Proposal[] public proposals;
 
+    struct Electorate {
+        uint256 weight; // weight is accumulated by delegation
+        address delegate; // person delegated to
+    }
+
+    mapping(address => Electorate) public electorates;
+
+    struct Referendum {
+        bytes32 name; // short name (up to 32 bytes)
+        uint256 voteCount; // number of accumulated votes
+        uint256 abstainCount; // number of abstained votes
+    }
+
+    uint256 public referendumCount;
+    Referendum[] public referendums;
+
     // @dev Create a new ballot to choose one of 'proposalNames'.
-    // @param proposalNames is the names of proposals.
-    constructor(bytes32[] memory proposalNames) Owner() {
+    constructor() Owner() {
         chairperson = msg.sender;
         voters[chairperson].weight = 1;
-        addProposals(proposalNames);
     }
 
     // @dev Change the chairperson
@@ -51,17 +63,33 @@ contract Ballot is Owner {
         voters[chairperson].weight = 1;
     }
 
+    // @dev Add a list of proposals.
+    // @param proposalNames is the names of proposals.
+    // @notice Test w/ ["0x63616e6469646174653100000000000000000000000000000000000000000000","0x6332000000000000000000000000000000000000000000000000000000000000","0x6333000000000000000000000000000000000000000000000000000000000000"]
     function addProposals(bytes32[] memory proposalNames) public {
         for (uint256 i = 0; i < proposalNames.length; i++) {
             addProposal(proposalNames[i]);
         }
     }
 
+    // @dev Add a proposal.
+    // @param _name is the name of the proposal.
     function addProposal(bytes32 _name) private {
         proposalCount++;
         // 'Proposal({...})' creates a temporary Proposal object and
         // 'proposals.push(...)' appends it to the end of 'proposals'.
         proposals.push(Proposal({name: _name, voteCount: 0}));
+    }
+
+    // @dev Add a referendum.
+    // @param _name is the name of the referendum.
+    function addReferendum(bytes32 _name) private {
+        referendumCount++;
+        // 'Referendum({...})' creates a temporary referendum object and
+        // 'referendums.push(...)' appends it to the end of 'referendums'.
+        referendums.push(
+            Referendum({name: _name, voteCount: 0, abstainCount: 0})
+        );
     }
 
     // @dev Give 'voter' the right to vote on this ballot. May only be called by 'chairperson'.
