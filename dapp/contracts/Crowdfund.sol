@@ -61,6 +61,8 @@ contract Crowdfund {
     /// @param _goal is the amount of ERC20 tokens to raise
     /// @param _startAt is the time when the campaign will start
     /// @param _endAt is the time when the campaign will end
+    // @note test w/ following code in javascript console:
+    //       let date = (new Date()).getTime(); console.log(Math.round((date+30000)/1000));console.log(Math.round((date+190000)/1000));
     function launch(
         uint256 _goal,
         uint32 _startAt,
